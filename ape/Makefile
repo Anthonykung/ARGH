@@ -10,19 +10,19 @@
 ##########################################################
 
 # Define Executable Name
-IAEXE := ape
+IAEXE := ia
 
 # Define ZIP File Name
-FNAME := ape-program.zip
+FNAME := ia-program.zip
 
 # Define Directories/Files To Ignore In Find Command `-o -name {{name}}` or `-o -path {{path}}` or `-o -iwholename {{name}}`
 IGN := -o -name test -o -name docs
 
 # Define Standard Version
-CVER := -std=gnu++11
+CVER := -std=c++17
 
 # Define Compiler (gcc or g++)
-CC := gcc
+CC := clang++
 
 # Define Source Directory (Where your program is)
 SDIR := .
@@ -31,10 +31,10 @@ SDIR := .
 BDIR := ./build
 
 # Define Compiler Flags
-CFLAGS := -Wall -ansi -lncurses -pthread
+CFLAGS := -fdiagnostics-color=always -Wall -pthread -g
 
 # Creat Subdirectories
-SUBDIR := $(shell find $(SDIR) -type d -not \( -path '$(BDIR)' -o -path '$(BDIR)/*' -o -iwholename '*.git*' $(IGN) \) -exec mkdir -p -- $(BDIR)/{} \;)
+SUBDIR := $(shell find $(SDIR) -type d -not -path '$(BDIR)/*' -not -path '.git/*' -not -path $(IGN) -exec mkdir -p -- $(BDIR)/{} \;)
 
 # Find all C and C++ files
 SRC := $(shell find $(SDIR) -name '*.cpp' -or -name '*.c')
@@ -42,7 +42,7 @@ OBJ := $(SRC:%=$(BDIR)/%.o)
 DEP := $(OBJ:.o=.d)
 
 # Include Directories
-IDIR := $(shell find $(SDIR) -type d)
+IDIR := $(shell find $(SDIR) -type d -not -path '$(BDIR)/*' -not -path '.git/*' -not -path $(IGN))
 IFLAGS := $(addprefix -I, $(IDIR))
 MFLAGS := $(IFLAGS) -MMD -MP
 

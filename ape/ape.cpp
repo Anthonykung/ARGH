@@ -15,35 +15,35 @@
 #include "ape.hpp"
 
 int main(int argc, char *argv[]) {
+  cout << "APE Started!" << endl;
   int sharedStatus = 0;
-  cout << "Started" << endl;
-  thread thermal(temp_regulator, std::ref(sharedStatus));
-  thread gpio(gpio_controller, std::ref(sharedStatus));
-  thread gige(gige_controller, std::ref(sharedStatus));
-  thread usbc(usbc_controller, std::ref(sharedStatus));
+  thread thermal(temp_regulator, ref(sharedStatus));
+  thread gpio(gpio_controller, ref(sharedStatus));
+  //thread gige(gige_controller, ref(sharedStatus));
+  //thread usbc(usbc_controller, ref(sharedStatus));
   unique_lock<mutex> lck(mtx);
   while (sharedStatus < 4) {
     cv.wait(lck);
   }
   thermal.join();
   gpio.join();
-  gige.join();
-  usbc.join();
+  // gige.join();
+  // usbc.join();
   cout << "Exiting" << endl;
   return sharedStatus;
 }
 
-int gige_controller(/*int &sharedStatus*/) {
-  // unique_lock<mutex> lck(mtx);
-  // sharedStatus += 1;
-  // cv.notify_one();
+int gige_controller(int &sharedStatus) {
+  unique_lock<mutex> lck(mtx);
+  sharedStatus += 1;
+  cv.notify_one();
   return 0;
 }
 
-int gpio_controller(/*int &sharedStatus*/) {
-  // unique_lock<mutex> lck(mtx);
-  // sharedStatus += 1;
-  // cv.notify_one();
+int gpio_controller(int &sharedStatus) {
+  //unique_lock<mutex> lck(mtx);
+  //sharedStatus += 1;
+  //cv.notify_one();
   gpio_export(422);  // PIN 7
   gpio_export(248);  // PIN 33
   gpio_set_direction(422, "in");
@@ -62,10 +62,10 @@ int gpio_controller(/*int &sharedStatus*/) {
   return 0;
 }
 
-int temp_regulator(/*int &sharedStatus*/) {
-  // unique_lock<mutex> lck(mtx);
-  // sharedStatus += 1;
-  // cv.notify_one();
+int temp_regulator(int &sharedStatus) {
+  //unique_lock<mutex> lck(mtx);
+  //sharedStatus += 1;
+  //cv.notify_one();
   int cpu_temp = check_cpu_temp();
   int gpu_temp = check_gpu_temp();
   int avg_temp = (cpu_temp + gpu_temp) / 2;
@@ -95,6 +95,7 @@ int check_fan_speed() {
     fan_speed = line;
   }
   fan_pwm.close();
+  cout << "Fan Speed: " << fan_speed << endl;
   return stoi(fan_speed);
 }
 
@@ -106,6 +107,7 @@ int check_cpu_temp() {
     cpu_temp_str += line;
   }
   cpu_temp.close();
+  cout << "CPU Temp: " << cpu_temp_str << endl;
   return stoi(cpu_temp_str);
 }
 
@@ -117,6 +119,7 @@ int check_gpu_temp() {
     gpu_temp_str += line;
   }
   gpu_temp.close();
+  cout << "GPU Temp: " << gpu_temp_str << endl;
   return stoi(gpu_temp_str);
 }
 
@@ -163,7 +166,7 @@ int gpio_set_direction(int gpio, string direction) {
  */
 int gpio_set_state(int gpio, string state) {
   ofstream gpio_state;
-  string temp = "/sys/class/gpio/gpio422/value";
+  string temp = "/sys/class/gpio/gpio" + to_string(gpio) + "/value";
   gpio_state.open(temp);
   gpio_state << state;
   gpio_state.close();
@@ -187,5 +190,6 @@ int gpio_get_state(int gpio) {
     state += line;
   }
   gpio_state.close();
+  cout << "GPIO State: " << state << endl;
   return stoi(state);
 }

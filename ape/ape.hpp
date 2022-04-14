@@ -16,15 +16,18 @@
 #define APE_HPP
 
 // Include C++ Libraries
+#include <cstdio>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <thread>
+#include <mutex>
 #include <fstream>
 #include <atomic>
-#include <thread>
-#include <chrono>
-#include <mutex>
 #include <condition_variable>
+#include <cmath>
+#include <cstring>
+#include <climits>
 
 // Include C Libraries
 #include <sys/wait.h>
@@ -49,6 +52,7 @@ using std::fstream;
 using std::ifstream;
 using std::ofstream;
 using std::stoi;
+using std::ref;
 
 // Declare Global Variables
 std::mutex mtx;
@@ -61,12 +65,12 @@ int check_gpu_temp();
 int check_fan_speed();
 int gpio_export(int gpio);
 int gpio_unexport(int gpio);
-int gpio_set_direction(int gpio, std::string direction);
-int gpio_set_state(int gpio, std::string state);
+int gpio_set_direction(int gpio, string direction);
+int gpio_set_state(int gpio, string state);
 int gpio_get_state(int gpio);
-int temp_regulator(/*int &sharedStatus*/);
-int gpio_controller(/*int &sharedStatus*/);
-int gige_controller(/*int &sharedStatus*/);
-int usbc_controller(/*int &sharedStatus*/);
+int temp_regulator(int &sharedStatus);
+int gpio_controller(int &sharedStatus);
+int gige_controller(int &sharedStatus);
+int usbc_controller(int &sharedStatus);
 
 #endif // APE_HPP
