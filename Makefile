@@ -31,10 +31,10 @@ SDIR := .
 BDIR := ./build
 
 # Define Compiler Flags
-CFLAGS := -Wall -ansi -pthread
+CFLAGS := -fdiagnostics-color=always -Wall -pthread -g
 
 # Creat Subdirectories
-SUBDIR := $(shell find $(SDIR) -type d -not \( -path '$(BDIR)' -o -path '$(BDIR)/*' -o -iwholename '*.git*' $(IGN) \) -exec mkdir -p -- $(BDIR)/{} \;)
+SUBDIR := $(shell find $(SDIR) -type d -not -path '$(BDIR)/*' -not -path '.git/*' -not -path $(IGN) -exec mkdir -p -- $(BDIR)/{} \;)
 
 # Find all C and C++ files
 SRC := $(shell find $(SDIR) -name '*.cpp' -or -name '*.c')
@@ -42,7 +42,7 @@ OBJ := $(SRC:%=$(BDIR)/%.o)
 DEP := $(OBJ:.o=.d)
 
 # Include Directories
-IDIR := $(shell find $(SDIR) -type d)
+IDIR := $(shell find $(SDIR) -type d -not -path '$(BDIR)/*' -not -path '.git/*' -not -path $(IGN))
 IFLAGS := $(addprefix -I, $(IDIR))
 MFLAGS := $(IFLAGS) -MMD -MP
 
