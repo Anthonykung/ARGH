@@ -1,0 +1,33 @@
+/**
+ * @file gige.cpp
+ * @author Anthony Kung (hi@anth.dev)
+ * @name GigE Camera
+ * @brief GigE Camera Library
+ * @version 0.0.1
+ * @date 2022-02-04
+ * 
+ * @copyright Copyright (c) 2022 Anthony Kung <hi@anth.dev>
+ * @license Apache-2.0
+ * 
+ */
+
+#include "gige.hpp"
+
+// Initialize Global Variables
+gige_sig_flag = 0;
+
+int get_gige_stats() {
+  
+}
+
+int gige_main() {
+
+}
+
+void termination_handler(int signum) {
+  cout << "Received Termination signal " << signum << endl;
+}
+
+void interrupt_handler(int signum) {
+  cout << "Received Interrupt signal " << signum << endl;
+}

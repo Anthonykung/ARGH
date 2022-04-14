@@ -1,0 +1,14 @@
+[Unit]
+Description=Jetson Optical Interface
+After=basic.target
+
+[Service]
+ExecStart=/usr/bin/make make run
+WorkingDirectory=/home/anthony/Optical-Interface/ape
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
