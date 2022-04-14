@@ -1,0 +1,15 @@
+[Unit]
+Description=Anthonian Imperx GigEVision Service
+After=basic.target
+
+[Service]
+WorkingDirectory=/home/anthony/Optical-Interface/IpxSDK
+Type=forking
+ExecStart=/bin/bash /home/anthony/Optical-Interface/IpxSDK/IpxGigE.sh
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
