@@ -19,6 +19,7 @@
 #include "EPD_4in2.h"
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <time.h>
 
 #define SHM_KEY 0x2684
 #define SHM_SIZE 1000
@@ -30,6 +31,12 @@ struct shmstu {
   int num_line;
   char* msg[SHM_SIZE];
 };
+
+void print_current_time_with_ms() {
+    struct timespec spec;
+    clock_gettime(0, &spec);
+    printf("Current time: %ld.%ld\n", spec.tv_sec, spec.tv_nsec);
+}
 
 int main(int argc, char *argv[]) {
 
@@ -114,16 +121,27 @@ int main(int argc, char *argv[]) {
 
       else if (strcmp(shmmsg->cmd, "write") == 0) {
         printf("Writing...\n");
+      
+        printf("Enter text: \n");
+        scanf("%s", user_input);
 
         EPD_4IN2_Init_Partial();
         EPD_4IN2_Clear();
-        EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
+        EPD_4IN2_PartialDisplay(0, 0, 400, 30, BlackImage);
         Paint_Clear(WHITE);
-        for (int i = 0; i < shmmsg->num_line; i++) {
-          Paint_DrawString_EN(10, i * 20, shmmsg->msg[i], &Font24, WHITE, BLACK);
-        }
+        Paint_DrawString_EN(10,  0, user_input, &Font24, WHITE, BLACK);
+        print_current_time_with_ms();
+        Paint_DrawString_EN(10, 20, user_input, &Font24, WHITE, BLACK);
 
         EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
+        EPD_4IN2_Sleep();
+
+        EPD_4IN2_Init_Partial();
+        Paint_DrawString_EN(10, 40, "Write Complete", &Font24, WHITE, BLACK);
+        print_current_time_with_ms();
+        Paint_DrawString_EN(10, 60, user_input, &Font24, WHITE, BLACK);
+
+        EPD_4IN2_PartialDisplay(0, 35, 400, 80, BlackImage);
         EPD_4IN2_Sleep();
       }
 
