@@ -154,7 +154,7 @@ int main(int argc, char *argv[]) {
           int num_line = 0;
           printf("Exit with `EXIT()`\n");
           printf("Enter Line Number: \n");
-          scanf("%d", num_line);
+          scanf("%d", &num_line);
 
           printf("Enter text: \n");
           scanf("%s", user_input);
