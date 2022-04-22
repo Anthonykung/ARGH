@@ -147,6 +147,34 @@ int main(int argc, char *argv[]) {
         print_current_time_with_ms();
       }
 
+      else if (strcmp(user_input, "write") == 0) {
+        printf("Writing...\n");
+      
+        printf("Enter text: \n");
+        scanf("%s", user_input);
+
+        EPD_4IN2_Init_Partial();
+        EPD_4IN2_Clear();
+        EPD_4IN2_PartialDisplay(0, 0, 400, 30, BlackImage);
+        Paint_Clear(WHITE);
+        Paint_DrawString_EN(10,  0, user_input, &Font24, WHITE, BLACK);
+        print_current_time_with_ms();
+        Paint_DrawString_EN(10, 20, user_input, &Font24, WHITE, BLACK);
+
+        EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
+        print_current_time_with_ms();
+        // EPD_4IN2_Sleep();
+
+        EPD_4IN2_Init_Partial();
+        Paint_DrawString_EN(10, 40, "Write Complete", &Font24, WHITE, BLACK);
+        print_current_time_with_ms();
+        Paint_DrawString_EN(10, 60, user_input, &Font24, WHITE, BLACK);
+
+        EPD_4IN2_PartialDisplay(0, 35, 400, 80, BlackImage);
+        EPD_4IN2_Sleep();
+        print_current_time_with_ms();
+      }
+
       else if (strcmp(shmmsg->cmd, "exit") == 0 || strcmp(user_input, "exit") == 0) {
         printf("Exiting...\n");
         EPD_4IN2_Init_Fast();
