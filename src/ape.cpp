@@ -16,9 +16,30 @@
 
 int main(int argc, char *argv[]) {
   cout << "APE Started!" << endl;
+
+  //****************************************
+
+  // Interprocess Communication
+
+  // ANTH = 2684
+  int shmid = shmget(SHM_KEY, sizeof(struct shmstu), IPC_CREAT | 0644);
+  if (shmid < 0) {
+    printf("IPC Init Failed\n");
+    return shmid;
+  }
+  shmmsg = (struct shmstu *) shmat(shmid, NULL, 0);
+  if (shmmsg == (void *) -1) {
+    printf("IPC Init Failed\n");
+    return -1;
+  }
+
+  //****************************************
+
+
   int sharedStatus = 0;
   thread thermal(temp_regulator, ref(sharedStatus));
   thread gpio(gpio_controller, ref(sharedStatus));
+  thread display(display_controller, ref(sharedStatus));
   //thread gige(gige_controller, ref(sharedStatus));
   //thread usbc(usbc_controller, ref(sharedStatus));
   unique_lock<mutex> lck(mtx);
@@ -194,8 +215,48 @@ int gpio_get_state(int gpio) {
   return stoi(state);
 }
 
-int display_write(int line, string message) {
+int display_controller(int &sharedStatus) {
+  unique_lock<mutex> lck(mtx);
+  sharedStatus += 1;
+  cv.notify_one();
+  // If Display is busy, wait for it to be free
+  while (shmmsg->busy) {
+    // Waiting For Display to be free
+  }
 
+  // Set command
+  strcpy(shmmsg->cmd, "init");
+
+  // Let Display Controller know that a message is ready to be read
+  shmmsg->request = 1;
+  return 0;
+}
+
+int display_exe(int &sharedStatus) {
+  unique_lock<mutex> lck(mtx);
+  sharedStatus += 1;
+  cv.notify_one();
+  execvp("../EPD/epd", NULL);
+  return 0;
+}
+
+int display_write(int line, string message) {
+  // If Display is busy, wait for it to be free
+  while (shmmsg->busy) {
+    // Waiting For Display to be free
+  }
+
+  // Set command
+  strcpy(shmmsg->cmd, "write");
+
+  // Assign number of lines
+  shmmsg->num_line = 6;
+
+  // Append message
+  strcpy(shmmsg->msg[line - 1], message.c_str());
+
+  // Let Display Controller know that a message is ready to be read
+  shmmsg->request = 1;
 }
 
 int display_state() {

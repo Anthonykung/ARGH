@@ -1,10 +1,10 @@
 [Unit]
-Description=Jetson Optical Interface
+Description=Aerospace Recorder for Graphical History
 After=basic.target
 
 [Service]
-ExecStart=/usr/bin/make make run
-WorkingDirectory=/home/anthony/Optical-Interface/ape
+ExecStart=/usr/bin/make run
+WorkingDirectory=/home/anthony/ARGH/src
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
