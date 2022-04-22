@@ -33,23 +33,28 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
+  shmmsg->busy = 1;
+
   //****************************************
 
 
   int sharedStatus = 0;
-  thread thermal(temp_regulator, ref(sharedStatus));
-  thread gpio(gpio_controller, ref(sharedStatus));
+  //thread thermal(temp_regulator, ref(sharedStatus));
+  //thread gpio(gpio_controller, ref(sharedStatus));
+  thread display_exe(display_exe, ref(sharedStatus));
   thread display(display_controller, ref(sharedStatus));
   //thread gige(gige_controller, ref(sharedStatus));
   //thread usbc(usbc_controller, ref(sharedStatus));
   unique_lock<mutex> lck(mtx);
-  while (sharedStatus < 4) {
+  while (sharedStatus < 2) {
     cv.wait(lck);
   }
-  thermal.join();
-  gpio.join();
+  //thermal.join();
+  //gpio.join();
   // gige.join();
   // usbc.join();
+  display_exe.join();
+  display.join();
   cout << "Exiting" << endl;
   return sharedStatus;
 }
@@ -108,7 +113,7 @@ int fan_control(int fan_speed) {
 }
 
 int check_fan_speed() {
-  ifstream fan_pwm;
+  fstream fan_pwm;
   fan_pwm.open("/sys/devices/pwm-fan/target_pwm");
   string fan_speed;
   string line;

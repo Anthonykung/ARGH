@@ -22,7 +22,7 @@ IGN := -o -name test -o -name docs
 CVER := -std=c++17
 
 # Define Compiler (gcc or g++)
-CC := clang++
+CC := g++
 
 # Define Source Directory (Where your program is)
 SDIR := .
