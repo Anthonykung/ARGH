@@ -134,7 +134,8 @@ int main(int argc, char *argv[]) {
         Paint_DrawString_EN(10, 20, user_input, &Font24, WHITE, BLACK);
 
         EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
-        EPD_4IN2_Sleep();
+        print_current_time_with_ms();
+        // EPD_4IN2_Sleep();
 
         EPD_4IN2_Init_Partial();
         Paint_DrawString_EN(10, 40, "Write Complete", &Font24, WHITE, BLACK);
@@ -143,6 +144,7 @@ int main(int argc, char *argv[]) {
 
         EPD_4IN2_PartialDisplay(0, 35, 400, 80, BlackImage);
         EPD_4IN2_Sleep();
+        print_current_time_with_ms();
       }
 
       else if (strcmp(shmmsg->cmd, "exit") == 0 || strcmp(user_input, "exit") == 0) {
