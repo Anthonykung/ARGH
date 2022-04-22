@@ -193,3 +193,109 @@ int gpio_get_state(int gpio) {
   cout << "GPIO State: " << state << endl;
   return stoi(state);
 }
+
+int display_write(int line, string message) {
+
+}
+
+int display_state() {
+
+  // Control Variables
+  int stat_ln;
+  int stop_ln;
+  int delay_ln;
+  int record_ln;
+  int prev_ln;
+  int info_ln;
+
+  int delay_sec;
+  int delay_config;
+  int record_sec;
+  int record_config;
+  string info_str;
+
+  switch (stat_ln) {
+    case 0:
+      display_write(1, "Waiting...");
+      break;
+    case 1:
+      display_write(1, "Recording...");
+      break;
+    case 2:
+      display_write(1, "Stopped...");
+      break;
+    case 3:
+      display_write(1, "Configuring...");
+      break;
+    default:
+      display_write(1, "ERROR");
+      break;
+  }
+
+  switch (stop_ln) {
+    case 0:
+      display_write(2, "  Start/Stop Recording");
+      break;
+    case 1:
+      display_write(2, "> Start/Stop Recording");
+      break;
+    default:
+      display_write(2, "ERROR");
+      break;
+  }
+
+  switch (delay_ln) {
+    case 0:
+      display_write(3, "  Preset Delay" + to_string(delay_sec/3600) + ":" + to_string((delay_sec%3600)/60) + ":" + to_string(delay_sec%60));
+      break;
+    case 1:
+      display_write(3, ">  Preset Delay" + to_string(delay_sec/3600) + ":" + to_string((delay_sec%3600)/60) + ":" + to_string(delay_sec%60));
+      break;
+    case 2:
+      display_write(3, ">  Preset Delay" + to_string(delay_config/3600) + ":" + to_string((delay_config%3600)/60) + ":" + to_string(delay_config%60));
+      break;
+    default:
+      display_write(3, "ERROR");
+      break;
+  }
+
+  switch (record_ln) {
+    case 0:
+      display_write(4, "  Recording Time" + to_string(record_sec/3600) + ":" + to_string((record_sec%3600)/60) + ":" + to_string(record_sec%60));
+      break;
+    case 1:
+      display_write(4, "> Recording Time" + to_string(record_sec/3600) + ":" + to_string((record_sec%3600)/60) + ":" + to_string(record_sec%60));
+      break;
+    case 2:
+      display_write(4, "> Recording Time" + to_string(record_config/3600) + ":" + to_string((record_config%3600)/60) + ":" + to_string(record_config%60));
+      break;
+    default:
+      display_write(4, "ERROR");
+      break;
+  }
+
+  switch (prev_ln) {
+    case 0:
+      display_write(5, "  Previous Settings");
+      break;
+    case 1:
+      display_write(5, "> Previous Settings");
+      break;
+    default:
+      display_write(5, "ERROR");
+      break;
+  }
+
+  switch (info_ln) {
+    case 0:
+      display_write(6, "");
+      break;
+    case 1:
+      display_write(6, "> " + info_str);
+      break;
+    default:
+      display_write(6, "ERROR");
+      break;
+  }
+
+}
