@@ -334,7 +334,7 @@ UBYTE DEV_Module_Init(void)
 	SYSFS_software_spi_begin();
 	SYSFS_software_spi_setBitOrder(SOFTWARE_SPI_MSBFIRST);
 	SYSFS_software_spi_setDataMode(SOFTWARE_SPI_Mode0);
-	SYSFS_software_spi_setClockDivider(SOFTWARE_SPI_CLOCK_DIV4);
+	SYSFS_software_spi_setClockDivider(SOFTWARE_SPI_CLOCK_DIV2);
 #elif USE_HARDWARE_LIB
 	printf("Write and read /dev/spidev0.0 \r\n");
 	DEV_GPIO_Init();

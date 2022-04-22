@@ -328,8 +328,8 @@ void EPD_4IN2_ReadBusy(void)
     Debug("e-Paper busy\r\n");
 	EPD_4IN2_SendCommand(0x71);
     while(DEV_Digital_Read(EPD_BUSY_PIN) == 0) {      //LOW: idle, HIGH: busy
-		EPD_4IN2_SendCommand(0x71);
-        DEV_Delay_ms(5);
+			EPD_4IN2_SendCommand(0x71);
+        // DEV_Delay_ms(5);
     }
     Debug("e-Paper busy release\r\n");
 }
@@ -341,7 +341,7 @@ parameter:
 static void EPD_4IN2_TurnOnDisplay(void)
 {
     EPD_4IN2_SendCommand(0x12);
-    DEV_Delay_ms(5);
+    // DEV_Delay_ms(5);
     EPD_4IN2_ReadBusy();
 }
 
@@ -454,7 +454,8 @@ void EPD_4IN2_Init_Partial(void)
     EPD_4IN2_SendData(0xbf); // KW-BF   KWR-AF	BWROTP 0f	BWOTP 1f
 
     EPD_4IN2_SendCommand(0x30); // PLL setting
-    EPD_4IN2_SendData(0x3C); // 3A 100HZ   29 150Hz 39 200HZ	31 171HZ
+		EPD_4IN2_SendData(0x39);
+    //EPD_4IN2_SendData(0x3C); // 3A 100HZ   29 150Hz 39 200HZ	31 171HZ
 
     EPD_4IN2_SendCommand(0x61); // resolution setting
     EPD_4IN2_SendData(0x01);
