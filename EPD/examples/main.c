@@ -110,10 +110,8 @@ int main(int argc, char *argv[]) {
 
         Paint_SelectImage(BlackImage);
 
+        EPD_4IN2_Clear();
         Paint_Clear(WHITE);
-        Paint_DrawString_EN(10,   0, "Refreshing...", &Font24, WHITE, BLACK);
-        Paint_DrawString_EN(10,  20, "Please wait...", &Font24, WHITE, BLACK);
-        Paint_DrawString_EN(10,  40, "Please wait...", &Font24, WHITE, BLACK);
 
         EPD_4IN2_Display(BlackImage);
         EPD_4IN2_Sleep();
@@ -121,9 +119,6 @@ int main(int argc, char *argv[]) {
 
       else if (strcmp(shmmsg->cmd, "write") == 0) {
         printf("Writing...\n");
-      
-        printf("Enter text: \n");
-        scanf("%s", user_input);
 
         EPD_4IN2_Init_Partial();
         EPD_4IN2_Clear();
@@ -149,30 +144,28 @@ int main(int argc, char *argv[]) {
 
       else if (strcmp(user_input, "write") == 0) {
         printf("Writing...\n");
-      
-        printf("Enter text: \n");
-        scanf("%s", user_input);
 
         EPD_4IN2_Init_Partial();
         EPD_4IN2_Clear();
         EPD_4IN2_PartialDisplay(0, 0, 400, 30, BlackImage);
         Paint_Clear(WHITE);
-        Paint_DrawString_EN(10,  0, user_input, &Font24, WHITE, BLACK);
-        print_current_time_with_ms();
-        Paint_DrawString_EN(10, 20, user_input, &Font24, WHITE, BLACK);
+      
+        while (strcmp(user_input, "EXIT()") != 0) {
+          int num_line = 0;
+          printf("Exit with `EXIT()`\n");
+          printf("Enter Line Number: \n");
+          scanf("%d", num_line);
 
-        EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
-        print_current_time_with_ms();
-        // EPD_4IN2_Sleep();
+          printf("Enter text: \n");
+          scanf("%s", user_input);
 
-        EPD_4IN2_Init_Partial();
-        Paint_DrawString_EN(10, 40, "Write Complete", &Font24, WHITE, BLACK);
-        print_current_time_with_ms();
-        Paint_DrawString_EN(10, 60, user_input, &Font24, WHITE, BLACK);
+          print_current_time_with_ms();
+          Paint_DrawString_EN(10, num_line * 20, user_input, &Font24, WHITE, BLACK);
 
-        EPD_4IN2_PartialDisplay(0, 35, 400, 80, BlackImage);
+          EPD_4IN2_PartialDisplay(0, 0, 400, (num_line + 1) * 20, BlackImage);
+          print_current_time_with_ms();
+        }
         EPD_4IN2_Sleep();
-        print_current_time_with_ms();
       }
 
       else if (strcmp(shmmsg->cmd, "exit") == 0 || strcmp(user_input, "exit") == 0) {
