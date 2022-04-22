@@ -141,6 +141,7 @@ int main(int argc, char *argv[]) {
 
         // Exit Program
         exit = 1;
+	break;
       }
       strcpy(user_input, "");
       shmmsg->busy = 0;
