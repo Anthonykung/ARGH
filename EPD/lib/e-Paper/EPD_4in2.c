@@ -278,19 +278,19 @@ parameter:
 static void EPD_4IN2_Reset(void)
 {
     DEV_Digital_Write(EPD_RST_PIN, 0);
-    DEV_Delay_ms(10);
+    DEV_Delay_ms(1);
     DEV_Digital_Write(EPD_RST_PIN, 1);
-    DEV_Delay_ms(10);
+    DEV_Delay_ms(1);
 
     DEV_Digital_Write(EPD_RST_PIN, 0);
-    DEV_Delay_ms(10);
+    DEV_Delay_ms(1);
     DEV_Digital_Write(EPD_RST_PIN, 1);
-    DEV_Delay_ms(10);
+    DEV_Delay_ms(1);
 	
     DEV_Digital_Write(EPD_RST_PIN, 0);
-    DEV_Delay_ms(10);
+    DEV_Delay_ms(1);
     DEV_Digital_Write(EPD_RST_PIN, 1);
-    DEV_Delay_ms(10);
+    DEV_Delay_ms(1);
 }
 
 /******************************************************************************
@@ -326,10 +326,10 @@ parameter:
 void EPD_4IN2_ReadBusy(void)
 {
     Debug("e-Paper busy\r\n");
-	EPD_4IN2_SendCommand(0x71);
+		EPD_4IN2_SendCommand(0x71);
     while(DEV_Digital_Read(EPD_BUSY_PIN) == 0) {      //LOW: idle, HIGH: busy
 			EPD_4IN2_SendCommand(0x71);
-        // DEV_Delay_ms(5);
+      DEV_Delay_ms(1);
     }
     Debug("e-Paper busy release\r\n");
 }
@@ -341,7 +341,7 @@ parameter:
 static void EPD_4IN2_TurnOnDisplay(void)
 {
     EPD_4IN2_SendCommand(0x12);
-    // DEV_Delay_ms(5);
+    DEV_Delay_ms(1);
     EPD_4IN2_ReadBusy();
 }
 
@@ -454,7 +454,8 @@ void EPD_4IN2_Init_Partial(void)
     EPD_4IN2_SendData(0xbf); // KW-BF   KWR-AF	BWROTP 0f	BWOTP 1f
 
     EPD_4IN2_SendCommand(0x30); // PLL setting
-    EPD_4IN2_SendData(0x3C); // 3A 100HZ   29 150Hz 39 200HZ	31 171HZ
+		EPD_4IN2_SendData(0x39);
+    //EPD_4IN2_SendData(0x3C); // 3A 100HZ   29 150Hz 39 200HZ	31 171HZ
 
     EPD_4IN2_SendCommand(0x61); // resolution setting
     EPD_4IN2_SendData(0x01);
@@ -575,7 +576,7 @@ void EPD_4IN2_Clear(void)
 
 	EPD_4IN2_SendCommand(0x12);		 //DISPLAY REFRESH 		
 	DEV_Delay_ms(1);	
-    EPD_4IN2_TurnOnDisplay();
+  EPD_4IN2_TurnOnDisplay();
 }
 
 /******************************************************************************
@@ -603,8 +604,8 @@ void EPD_4IN2_Display(UBYTE *Image)
     }
 
 	EPD_4IN2_SendCommand(0x12);		 //DISPLAY REFRESH 		
-	DEV_Delay_ms(10);		
-    EPD_4IN2_TurnOnDisplay();
+	DEV_Delay_ms(1);		
+  EPD_4IN2_TurnOnDisplay();
 }
 
 void EPD_4IN2_PartialDisplay(UWORD X_start,UWORD Y_start,UWORD X_end,UWORD Y_end, UBYTE *Image)
@@ -649,7 +650,7 @@ void EPD_4IN2_PartialDisplay(UWORD X_start,UWORD Y_start,UWORD X_end,UWORD Y_end
     }
 
 	EPD_4IN2_SendCommand(0x12);		 //DISPLAY REFRESH 		             
-	DEV_Delay_ms(10);     //The delay here is necessary, 200uS at least!!!     
+	DEV_Delay_ms(1);     //The delay here is necessary, 200uS at least!!!     
 	EPD_4IN2_TurnOnDisplay();
 }
 
