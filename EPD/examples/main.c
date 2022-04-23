@@ -160,6 +160,7 @@ int main(int argc, char *argv[]) {
           scanf("%s", user_input);
 
           print_current_time_with_ms();
+          Paint_ClearWindows(0, num_line * 20, 400, num_line * 20 + 20, WHITE);
 
           Paint_DrawString_EN(10, num_line * 20, user_input, &Font24, WHITE, BLACK);
 
