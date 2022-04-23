@@ -161,7 +161,6 @@ int main(int argc, char *argv[]) {
 
           print_current_time_with_ms();
 
-          Paint_ClearWindows(10, num_line * 20, 400, 20, WHITE);
           Paint_DrawString_EN(10, num_line * 20, user_input, &Font24, WHITE, BLACK);
 
           EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
