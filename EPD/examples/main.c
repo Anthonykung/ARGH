@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
 
         EPD_4IN2_Init_Partial();
         EPD_4IN2_Clear();
-        EPD_4IN2_Display(BlackImage);
+        EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
         Paint_ClearWindows(0, 0, 400, 300, WHITE);
       
         while (strcmp(user_input, "EXIT()") != 0) {
@@ -163,7 +163,7 @@ int main(int argc, char *argv[]) {
 
           Paint_DrawString_EN(10, num_line * 20, user_input, &Font24, WHITE, BLACK);
 
-          EPD_4IN2_Display(BlackImage);
+          EPD_4IN2_PartialDisplay(0, num_line * 20, 400, num_line * 20 + 20, BlackImage);
           print_current_time_with_ms();
         }
         EPD_4IN2_Sleep();
