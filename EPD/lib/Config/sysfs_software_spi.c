@@ -157,8 +157,8 @@ uint8_t SYSFS_software_spi_transfer(uint8_t value)
         value = temp;
     }
 
-    uint8_t delay = software_spi.Delay >> 1;
-    for(int j=delay; j > 0; j--);
+    //uint8_t delay = software_spi.Delay >> 1;
+    for(int j=1; j > 0; j--);
 
     // printf("value = %d\r\n", value);
     uint8_t Read_miso = 0;
