@@ -146,9 +146,6 @@ int main(int argc, char *argv[]) {
         printf("Writing...\n");
 
         EPD_4IN2_Init_Partial();
-        EPD_4IN2_Clear();
-        EPD_4IN2_PartialDisplay(0, 0, 400, 30, BlackImage);
-        Paint_Clear(WHITE);
       
         while (strcmp(user_input, "EXIT()") != 0) {
           int num_line = 0;
@@ -160,9 +157,13 @@ int main(int argc, char *argv[]) {
           scanf("%s", user_input);
 
           print_current_time_with_ms();
+          EPD_4IN2_Clear();
+          EPD_4IN2_PartialDisplay(0, 0, 400, 30, BlackImage);
+          Paint_Clear(WHITE);
+
           Paint_DrawString_EN(10, num_line * 20, user_input, &Font24, WHITE, BLACK);
 
-          EPD_4IN2_PartialDisplay(0, 0, 400, (num_line + 1) * 20, BlackImage);
+          EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
           print_current_time_with_ms();
         }
         EPD_4IN2_Sleep();
