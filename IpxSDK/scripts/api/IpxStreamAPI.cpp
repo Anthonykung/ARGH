@@ -13,50 +13,72 @@
  * 
  */
 
-#include "IpxCameraApi.h"
+#include "IpxStreamAPI.hpp"
+
+#define SHM_KEY_GIGE 0x4443
+#define STR_SIZE 1000
+#define DEVICES 5
+
+struct gige_stats {
+    int num_devices;
+    char identifier[DEVICES][STR_SIZE];
+    char path[STR_SIZE];
+};
+
+struct gige_stats *shmmsg_gige;
 
 // Main function
-int main()
-{
+int main(int argc, char *argv[]) {
+
+    //****************************************
+
+    // Interprocess Communication
+
+    // ANTH = 2684
+    int shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct gige_stats), IPC_CREAT | 0644);
+    if (shmid_gige < 0) {
+        std::cout << "IPC Init Failed\n" << std::endl;
+        return shmid_gige;
+    }
+    shmmsg_gige = (struct gige_stats *) shmat(shmid_gige, NULL, 0);
+    if (shmmsg_gige == (void *) -1) {
+        std::cout << "IPC Init Failed\n" << std::endl;
+        return -1;
+    }
+
+  //****************************************
+    
     // Get System
 	auto system = IpxCam::IpxCam_GetSystem();
-    if (system)
-    {
-        while (true)
-        {
+    if (system) {
+        while (true) {
             // Select desired interface
             auto iface = SelectInterface(system);
-            if (iface)
-            {
+            if (iface) {
                 // Show Number of Connected Devices
                 auto numDevices = GetConnectedDevices(iface);
 
                 for (int i = 0; i < numDevices; i++) {
                     // Select desired device
                     auto deviceInfo = SelectDevice(iface, i);
-                    if (deviceInfo)
-                    {
+                    if (deviceInfo) {
                         auto deviceName = deviceInfo->GetDisplayName();
                         std::cout << "\nConnecting to " << deviceName << " ....\n";
 
                         // check if Ip Address can be adjusted
-                        if (deviceInfo->GetAccessStatus() == IpxCam::DeviceInfo::IpSubnetMismatch)
-                        {
+                        if (deviceInfo->GetAccessStatus() == IpxCam::DeviceInfo::IpSubnetMismatch) {
                             std::cout << "Cannot connect due to Ip Subnet Mismatch error\n";
                             SetIpAddress(deviceInfo);
                         }
 
-                        if (deviceInfo->GetAccessStatus() == IpxCam::DeviceInfo::AccessStatusReadWrite)
-                        {
+                        if (deviceInfo->GetAccessStatus() == IpxCam::DeviceInfo::AccessStatusReadWrite) {
                             auto device = IpxCam_CreateDevice(deviceInfo);
-                            if (device)
-                            {
+                            if (device) {
                                 std::cout << "Connecting to " << deviceName << " DONE\n\n";
                                 std::cout << std::endl;
 
                                 IpxCam::Stream *stream = nullptr;
-                                if (device->GetNumStreams() >= 1 && (stream = device->GetStreamByIndex(0)))
-                                {
+                                if (device->GetNumStreams() >= 1 && (stream = device->GetStreamByIndex(0))) {
                                     std::vector<IpxCam::Buffer*> bufferList;
                                     auto bufSize = stream->GetBufferSize();
                                     auto minNumBuffers = stream->GetMinNumBuffers();
@@ -151,8 +173,12 @@ int GetConnectedDevices(IpxCam::Interface *iface)
     for (auto device = list->GetFirst(); device; device = list->GetNext())
     {
         std::cout << "\tDevice Name: " << device->GetDisplayName() << "\tIdentified By: [" << (devices.size() - 1) << "]" << std::endl;
+        char identity[STR_SIZE];
+        snprintf(identity, STR_SIZE - 1, "%d", (devices.size() - 1));
+        strcpy(gige_stats->identifier[i], identity);
         numDevices++;
     }
+    gige_stats->num_devices = numDevices;
     return numDevices;
 }
 

@@ -39,8 +39,9 @@
 // Define Local Constants
 #define CPU_TEMP "/sys/class/thermal/thermal_zone0/temp"
 #define GPU_TEMP "/sys/class/thermal/thermal_zone1/temp"
-#define SHM_KEY 0x2684
-#define SHM_SIZE 1000
+#define SHM_KEY_WEPD 0x9373
+#define SHM_KEY_GIGE 0x4443
+#define STR_SIZE 1000
 
 // Define Namespaces
 using std::cout;
@@ -59,18 +60,18 @@ using std::stoi;
 using std::ref;
 
 // Declare Global Structs
-struct shmstu {
+struct shm_wepd {
   int request;
   int busy;
-  char cmd[SHM_SIZE];
+  char cmd[STR_SIZE];
   int num_line;
-  char* msg[SHM_SIZE];
+  char msg[STR_SIZE];
 };
 
 // Declare Global Variables
 std::mutex mtx;
 std::condition_variable cv;
-struct shmstu *shmmsg;
+struct shm_wepd *shmmsg_wepd;
 
 // Declare Functions
 int fan_control(int fan_speed);
@@ -87,5 +88,8 @@ int gpio_controller(int &sharedStatus);
 int gige_controller(int &sharedStatus);
 int usbc_controller(int &sharedStatus);
 int display_controller(int &sharedStatus);
+int display_exe(int &sharedStatus);
+int display_write(int line, string message);
+int display_state();
 
 #endif // APE_HPP

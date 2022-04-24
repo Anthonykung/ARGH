@@ -21,15 +21,15 @@
 #include <sys/shm.h>
 #include <time.h>
 
-#define SHM_KEY 0x2684
-#define SHM_SIZE 1000
+#define SHM_KEY 0x9373
+#define STR_SIZE 1000
 
-struct shmstu {
+struct shm_wepd {
   int request;
   int busy;
-  char cmd[SHM_SIZE];
+  char cmd[STR_SIZE];
   int num_line;
-  char* msg[SHM_SIZE];
+  char msg[STR_SIZE];
 };
 
 void print_current_time_with_ms() {
@@ -45,14 +45,14 @@ int main(int argc, char *argv[]) {
   // Interprocess Communication
 
   // ANTH = 2684
-  struct shmstu *shmmsg;
-  int shmid = shmget(SHM_KEY, sizeof(struct shmstu), IPC_CREAT | 0644);
-  if (shmid < 0) {
+  struct shm_wepd *shmmsg_wepd;
+  int shmid_wepd = shmget(SHM_KEY, sizeof(struct shm_wepd), IPC_CREAT | 0644);
+  if (shmid_wepd < 0) {
     printf("IPC Init Failed\n");
-    return shmid;
+    return shmid_wepd;
   }
-  shmmsg = shmat(shmid, NULL, 0);
-  if (shmmsg == (void *) -1) {
+  shmmsg_wepd = shmat(shmid_wepd, NULL, 0);
+  if (shmmsg_wepd == (void *) -1) {
     printf("IPC Init Failed\n");
     return -1;
   }
@@ -79,12 +79,12 @@ int main(int argc, char *argv[]) {
     scanf("%s", user_input);
 
     // Only process if request is activated or user input is not empty
-    if (shmmsg->request == 1 || strcmp(user_input, "") != 0) {
+    if (shmmsg_wepd->request == 1 || strcmp(user_input, "") != 0) {
       printf("Request\n");
-      shmmsg->busy = 1;
-      shmmsg->request = 0;
+      shmmsg_wepd->busy = 1;
+      shmmsg_wepd->request = 0;
 
-      if (strcmp(shmmsg->cmd, "init") == 0 || strcmp(user_input, "init") == 0) {
+      if (strcmp(shmmsg_wepd->cmd, "init") == 0 || strcmp(user_input, "init") == 0) {
         printf("Initializing...\n");
         if(DEV_Module_Init()!=0){
           return -1;
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
         EPD_4IN2_Sleep();
       }
 
-      else if (strcmp(shmmsg->cmd, "refresh") == 0 || strcmp(user_input, "refresh") == 0) {
+      else if (strcmp(shmmsg_wepd->cmd, "refresh") == 0 || strcmp(user_input, "refresh") == 0) {
         printf("Refreshing...\n");
         if(DEV_Module_Init()!=0){
           return -1;
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
         EPD_4IN2_Sleep();
       }
 
-      else if (strcmp(shmmsg->cmd, "write") == 0) {
+      else if (strcmp(shmmsg_wepd->cmd, "write") == 0) {
         printf("Writing...\n");
 
         EPD_4IN2_Init_Partial();
@@ -140,6 +140,23 @@ int main(int argc, char *argv[]) {
         EPD_4IN2_PartialDisplay(0, 35, 400, 80, BlackImage);
         EPD_4IN2_Sleep();
         print_current_time_with_ms();
+      }
+
+      else if (strcmp(shmmsg_wepd->cmd, "write") == 0) {
+        Paint_ClearWindows(0, shmmsg_wepd->num_line * 20, 400, shmmsg_wepd->num_line * 20 + 20, WHITE);
+        Paint_DrawString_EN(10, shmmsg_wepd->num_line * 20, shmmsg_wepd->msg, &Font24, WHITE, BLACK);
+        EPD_4IN2_PartialDisplay(0, shmmsg_wepd->num_line * 20, 400, shmmsg_wepd->num_line * 20 + 20, BlackImage);
+      }
+
+      else if (strcmp(shmmsg_wepd->cmd, "start write") == 0) {
+        EPD_4IN2_Init_Partial();
+        EPD_4IN2_Clear();
+        EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
+        Paint_ClearWindows(0, 0, 400, 300, WHITE);
+      }
+
+      else if (strcmp(shmmsg_wepd->cmd, "end write") == 0) {
+        EPD_4IN2_Sleep();
       }
 
       else if (strcmp(user_input, "write") == 0) {
@@ -170,7 +187,7 @@ int main(int argc, char *argv[]) {
         EPD_4IN2_Sleep();
       }
 
-      else if (strcmp(shmmsg->cmd, "exit") == 0 || strcmp(user_input, "exit") == 0) {
+      else if (strcmp(shmmsg_wepd->cmd, "exit") == 0 || strcmp(user_input, "exit") == 0) {
         printf("Exiting...\n");
         EPD_4IN2_Init_Fast();
         EPD_4IN2_Clear();
@@ -180,14 +197,14 @@ int main(int argc, char *argv[]) {
         DEV_Module_Exit();
 
         // Detach SHM
-        shmdt(shmmsg);
+        shmdt(shmmsg_wepd);
 
         // Exit Program
         exit = 1;
 	break;
       }
       strcpy(user_input, "");
-      shmmsg->busy = 0;
+      shmmsg_wepd->busy = 0;
     }
   }
 
