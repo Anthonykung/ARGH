@@ -72,6 +72,7 @@ struct shm_wepd {
 std::mutex mtx;
 std::condition_variable cv;
 struct shm_wepd *shmmsg_wepd;
+int wepd_pid;
 
 // Declare Functions
 int fan_control(int fan_speed);

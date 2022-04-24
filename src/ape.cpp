@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
   int sharedStatus = 0;
   //thread thermal(temp_regulator, ref(sharedStatus));
   //thread gpio(gpio_controller, ref(sharedStatus));
-  thread display_exe(display_exe, ref(sharedStatus));
+  thread display_app(display_exe, ref(sharedStatus));
   thread display(display_controller, ref(sharedStatus));
   //thread gige(gige_controller, ref(sharedStatus));
   //thread usbc(usbc_controller, ref(sharedStatus));
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
   //gpio.join();
   // gige.join();
   // usbc.join();
-  display_exe.join();
+  display_app.join();
   display.join();
   cout << "Exiting" << endl;
   return sharedStatus;
@@ -224,6 +224,7 @@ int display_controller(int &sharedStatus) {
   unique_lock<mutex> lck(mtx);
   sharedStatus += 1;
   cv.notify_one();
+  printf("Initializing Display\n");
   // If Display is busy, wait for it to be free
   while (shmmsg_wepd->busy) {
     // Waiting For Display to be free
@@ -271,6 +272,13 @@ int display_controller(int &sharedStatus) {
     else {
       sleep(60);
       display_interval++;
+      char user_input[256];
+      printf("Enter Command: ");
+      scanf(user_input, 256);
+      strcpy(shmmsg_wepd->cmd, "write");
+      display_write(1, string(user_input));
+      // Let Display Controller know that a message is ready to be read
+      shmmsg_wepd->request = 1;
     }
   }
 
@@ -289,7 +297,10 @@ int display_exe(int &sharedStatus) {
   unique_lock<mutex> lck(mtx);
   sharedStatus += 1;
   cv.notify_one();
-  execvp("../EPD/epd", NULL);
+  wepd_pid = fork();
+  if (wepd_pid == 0) {
+    execl("../EPD/epd", "../EPD/epd", NULL);
+  }
   return 0;
 }
 
@@ -303,7 +314,7 @@ int display_write(int line, string message) {
   strcpy(shmmsg_wepd->cmd, "write");
 
   // Assign number of lines
-  shmmsg_wepd->num_line = 6;
+  shmmsg_wepd->num_line = line;
 
   // Append message
   strcpy(shmmsg_wepd->msg, message.c_str());

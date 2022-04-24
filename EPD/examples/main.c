@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
     printf("IPC Init Failed\n");
     return -1;
   }
+  shmmsg_wepd->busy = 1;
 
   //****************************************
 
@@ -71,7 +72,35 @@ int main(int argc, char *argv[]) {
 
   int exit = 0;
 
+  // printf("Initializing...\n");
+  // if(DEV_Module_Init()!=0){
+  //   return -1;
+  // }
+  // EPD_4IN2_Init_Fast();
+
+  // Paint_SelectImage(BlackImage);
+
+  // Paint_Clear(WHITE);
+  // Paint_DrawString_EN(10,   0, "Initializing...", &Font24, WHITE, BLACK);
+  // Paint_DrawString_EN(10,  20, "Please wait...", &Font24, WHITE, BLACK);
+
+  // EPD_4IN2_Display(BlackImage);
+  // EPD_4IN2_Sleep();
+  
+  shmmsg_wepd->busy = 0;
+
+
   while (exit == 0) {
+  
+  FILE *fp;
+  fp = fopen("./test.txt", "a");
+  fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
+  fprintf(fp, "Request: %d\n", shmmsg_wepd->request);
+  fprintf(fp, "Line: %d\n", shmmsg_wepd->num_line);
+  fprintf(fp, "CMD: %s\n", shmmsg_wepd->cmd);
+  fprintf(fp, "MSG: %s\n", shmmsg_wepd->msg);
+  fprintf(fp, "\n");
+  fclose(fp);
 
     char user_input[27] = "";
 
