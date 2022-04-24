@@ -22,18 +22,18 @@ int main(int argc, char *argv[]) {
   // Interprocess Communication
 
   // ANTH = 2684
-  int shmid = shmget(SHM_KEY, sizeof(struct shmstu), IPC_CREAT | 0644);
-  if (shmid < 0) {
+  int shmid_wepd = shmget(SHM_KEY_WEPD, sizeof(struct shm_wepd), IPC_CREAT | 0644);
+  if (shmid_wepd < 0) {
     printf("IPC Init Failed\n");
-    return shmid;
+    return shmid_wepd;
   }
-  shmmsg = (struct shmstu *) shmat(shmid, NULL, 0);
-  if (shmmsg == (void *) -1) {
+  shmmsg_wepd = (struct shm_wepd *) shmat(shmid_wepd, NULL, 0);
+  if (shmmsg_wepd == (void *) -1) {
     printf("IPC Init Failed\n");
     return -1;
   }
 
-  shmmsg->busy = 1;
+  shmmsg_wepd->busy = 1;
 
   //****************************************
 
@@ -225,15 +225,63 @@ int display_controller(int &sharedStatus) {
   sharedStatus += 1;
   cv.notify_one();
   // If Display is busy, wait for it to be free
-  while (shmmsg->busy) {
+  while (shmmsg_wepd->busy) {
     // Waiting For Display to be free
   }
 
   // Set command
-  strcpy(shmmsg->cmd, "init");
+  strcpy(shmmsg_wepd->cmd, "init");
 
   // Let Display Controller know that a message is ready to be read
-  shmmsg->request = 1;
+  shmmsg_wepd->request = 1;
+  // If Display is busy, wait for it to be free
+  while (shmmsg_wepd->busy) {
+    // Waiting For Display to be free
+  }
+  // Set command
+  strcpy(shmmsg_wepd->cmd, "write start");
+  // Let Display Controller know that a message is ready to be read
+  shmmsg_wepd->request = 1;
+
+  int display_status = 0;
+  int display_interval = 0;
+
+  // Refresh the display every 3 minutes to prevent failure
+  while(display_status == 0) {
+    if (display_interval == 3) {
+      printf("Refreshing Display\n");
+      // If Display is busy, wait for it to be free
+      while (shmmsg_wepd->busy) {
+        // Waiting For Display to be free
+      }
+      // Set command
+      strcpy(shmmsg_wepd->cmd, "refresh");
+      printf("Refresh Complete\n");
+      // Let Display Controller know that a message is ready to be read
+      shmmsg_wepd->request = 1;
+      // If Display is busy, wait for it to be free
+      while (shmmsg_wepd->busy) {
+        // Waiting For Display to be free
+      }
+      // Set command
+      strcpy(shmmsg_wepd->cmd, "write start");
+      // Let Display Controller know that a message is ready to be read
+      shmmsg_wepd->request = 1;
+    }
+    else {
+      sleep(60);
+      display_interval++;
+    }
+  }
+
+  // If Display is busy, wait for it to be free
+  while (shmmsg_wepd->busy) {
+    // Waiting For Display to be free
+  }
+  // Set command
+  strcpy(shmmsg_wepd->cmd, "write end");
+  // Let Display Controller know that a message is ready to be read
+  shmmsg_wepd->request = 1;
   return 0;
 }
 
@@ -247,21 +295,21 @@ int display_exe(int &sharedStatus) {
 
 int display_write(int line, string message) {
   // If Display is busy, wait for it to be free
-  while (shmmsg->busy) {
+  while (shmmsg_wepd->busy) {
     // Waiting For Display to be free
   }
 
   // Set command
-  strcpy(shmmsg->cmd, "write");
+  strcpy(shmmsg_wepd->cmd, "write");
 
   // Assign number of lines
-  shmmsg->num_line = 6;
+  shmmsg_wepd->num_line = 6;
 
   // Append message
-  strcpy(shmmsg->msg[line - 1], message.c_str());
+  strcpy(shmmsg_wepd->msg, message.c_str());
 
   // Let Display Controller know that a message is ready to be read
-  shmmsg->request = 1;
+  shmmsg_wepd->request = 1;
 }
 
 int display_state() {

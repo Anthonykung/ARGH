@@ -28,6 +28,8 @@
 #include <algorithm>
 #include <chrono>
 #include <ctime>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 
 // Function Prototypes
 IpxCam::Interface *SelectInterface( IpxCam::System *system );
