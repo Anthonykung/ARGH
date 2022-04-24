@@ -1,0 +1,12 @@
+Busy: 0
+Request: 1
+Line: 1
+CMD: write
+MSG: Init Complete
+
+Busy: 0
+Request: 1
+Line: 1
+CMD: write
+MSG: Init Complete
+

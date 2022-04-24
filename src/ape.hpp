@@ -92,5 +92,6 @@ int display_controller(int &sharedStatus);
 int display_exe(int &sharedStatus);
 int display_write(int line, string message);
 int display_state();
+int interactive();
 
 #endif // APE_HPP

@@ -45,6 +45,8 @@ int main(int argc, char *argv[]) {
   thread display(display_controller, ref(sharedStatus));
   //thread gige(gige_controller, ref(sharedStatus));
   //thread usbc(usbc_controller, ref(sharedStatus));
+
+  interactive();
   unique_lock<mutex> lck(mtx);
   while (sharedStatus < 2) {
     cv.wait(lck);
@@ -220,13 +222,37 @@ int gpio_get_state(int gpio) {
   return stoi(state);
 }
 
+int interactive() {
+  while (true){
+    while (shmmsg_wepd->busy) {
+      // usleep(100);
+    }
+    char user_input[256];
+    printf("APE Ready: ");
+    scanf(user_input, 256);
+    strcpy(shmmsg_wepd->cmd, "write");
+    display_write(1, string(user_input));
+    // Let Display Controller know that a message is ready to be read
+    shmmsg_wepd->request = 1;
+  }
+  
+}
+
+void  Handler(int signo) {
+    //System Exit
+    printf("\r\nHandler:exit\r\n");
+    DEV_Module_Exit();
+
+    exit(0);
+}
+
 int display_controller(int &sharedStatus) {
   unique_lock<mutex> lck(mtx);
   sharedStatus += 1;
   cv.notify_one();
   printf("Initializing Display\n");
   // If Display is busy, wait for it to be free
-  while (shmmsg_wepd->busy) {
+  while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
     // Waiting For Display to be free
   }
 
@@ -235,24 +261,28 @@ int display_controller(int &sharedStatus) {
 
   // Let Display Controller know that a message is ready to be read
   shmmsg_wepd->request = 1;
+
   // If Display is busy, wait for it to be free
-  while (shmmsg_wepd->busy) {
+  while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
     // Waiting For Display to be free
   }
   // Set command
-  strcpy(shmmsg_wepd->cmd, "write start");
+  strcpy(shmmsg_wepd->cmd, "start write");
   // Let Display Controller know that a message is ready to be read
   shmmsg_wepd->request = 1;
 
   int display_status = 0;
   int display_interval = 0;
+  int display_timer = 0;
+
+  display_write(1, "Init Complete");
 
   // Refresh the display every 3 minutes to prevent failure
   while(display_status == 0) {
     if (display_interval == 3) {
       printf("Refreshing Display\n");
       // If Display is busy, wait for it to be free
-      while (shmmsg_wepd->busy) {
+      while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
         // Waiting For Display to be free
       }
       // Set command
@@ -261,29 +291,32 @@ int display_controller(int &sharedStatus) {
       // Let Display Controller know that a message is ready to be read
       shmmsg_wepd->request = 1;
       // If Display is busy, wait for it to be free
-      while (shmmsg_wepd->busy) {
+      while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
         // Waiting For Display to be free
       }
       // Set command
-      strcpy(shmmsg_wepd->cmd, "write start");
+      strcpy(shmmsg_wepd->cmd, "start write");
       // Let Display Controller know that a message is ready to be read
       shmmsg_wepd->request = 1;
+      display_interval = 0;
     }
     else {
-      sleep(60);
-      display_interval++;
-      char user_input[256];
-      printf("Enter Command: ");
-      scanf(user_input, 256);
-      strcpy(shmmsg_wepd->cmd, "write");
-      display_write(1, string(user_input));
-      // Let Display Controller know that a message is ready to be read
-      shmmsg_wepd->request = 1;
+      sleep(1);
+      display_timer++;
+      display_write(11, "Refresh Timer: " + to_string(display_timer));
+      if (display_timer == 60) {
+        display_interval++;
+        display_timer = 0;
+      }
+      else if (display_timer == 50 && display_interval == 2) {
+        display_write(12, "Refresh Imminent");
+        display_write(13, "This may take 20 seconds");
+      }
     }
   }
 
   // If Display is busy, wait for it to be free
-  while (shmmsg_wepd->busy) {
+  while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
     // Waiting For Display to be free
   }
   // Set command
@@ -306,7 +339,7 @@ int display_exe(int &sharedStatus) {
 
 int display_write(int line, string message) {
   // If Display is busy, wait for it to be free
-  while (shmmsg_wepd->busy) {
+  while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
     // Waiting For Display to be free
   }
 
