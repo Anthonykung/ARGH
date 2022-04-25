@@ -74,7 +74,7 @@ char temptimestamp[100];
 char cstr[8];
 char fullremoval[100];
 int stored = 0;
-std::this_thread::sleep_for(std::chrono::seconds(2));
+//std::this_thread::sleep_for(std::chrono::seconds(2));
 int firstfile = 0;
 int timepiece;
 //char timestr[20];
