@@ -136,9 +136,17 @@ string flightstring;
 
   printf("before2: %s\n",fullname);
   fstream flightfile;
+printf("23: %s\n",fullname);
+
   flightfile.open("/home/anthony/ARGH/BosonUSB/flightnumber.txt",ios::in);
+  printf("24: %s\n",fullname);
+
   if(flightfile.is_open()){
+    printf("25: %s\n",fullname);
+
         getline(flightfile,flightstring);
+       printf("26: %s\n",fullname);
+
         flightfile.close();
   }
   else{
