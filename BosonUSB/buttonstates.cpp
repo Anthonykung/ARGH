@@ -66,7 +66,7 @@ void callbosonstore(time_t currtime)
     printf("WHAT IS IT 4\n");
 
   char temp[15];
-  sprintf(temp,%d,currtime);
+  sprintf(temp,"%d",currtime);
   bosstr[1] = *temp; 
   printf("WHAT IS IT bos: %s\n",bosstr[1]);
   //snprintf(bosstr[1],15,"%i",currtime);
