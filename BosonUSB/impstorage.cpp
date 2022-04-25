@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
   char raw[6] = ".raw";
   char fullname[100];
   char fullname2[100];
-  char fullname3[100];
+ // char fullname3[100];
   int picnum = 0;
   char temptimestampstart[20] = "PicNumber";
   char temptimestamp[100];
@@ -100,10 +100,11 @@ int main(int argc, char *argv[])
     strcat(fullname2, cstr);
     strcat(fullname2, raw);
 
-    strcpy(fullname2, filename);
+  /*  strcpy(fullname2, filename);
     sprintf(cstr, "%d", picnum + 2);
     strcat(fullname2, cstr);
     strcat(fullname2, raw);
+    */
    // printf("IMP LOOKING FOR: %s\n",fullname);
     //int run = 0;
     int secondnotfound = 1;
@@ -114,12 +115,13 @@ int main(int argc, char *argv[])
         strcpy(fullname,fullname2);
         picnum++;
       }
-       if(stat(fullname3, &currentfilestats) == 0){
+       /*if(stat(fullname3, &currentfilestats) == 0){
         secondnotfound = 0;
         strcpy(fullname,fullname3);
         picnum++;
         picnum++;
       }
+      */
     //  run++;
       // printf("looping in here cause it works \n");
     }
