@@ -16,7 +16,7 @@
 
 using namespace std;
 int Storage(char* oldname, int camnum, char* timestamp){
-printf("STORAGE FOR PIC: %s\n", oldname);
+//printf("STORAGE FOR PIC: %s\n", oldname);
 char newname[100] = "/media/anthony/CapstoneSSD/";
 char camerastr[7] = "Camera";
 char cstr[8];
@@ -100,7 +100,7 @@ while(1){
  strcat(fullname,cstr);
  strcat(fullname,tiff);
 
-printf("ABOUT TO LOOK FOR THIS: %s\n",fullname);
+//printf("ABOUT TO LOOK FOR THIS: %s\n",fullname);
  while(stat(fullname,&currentfilestats) != 0){
 //printf("looping in here cause it works \n");
  }
@@ -145,7 +145,7 @@ string flightstring;
   printf("Error opening flight number\n");
   }
 
-printf("2: %s\n",fullname);
+//printf("2: %s\n",fullname);
 
  strcpy(temptimestamp, "Flight");
  strcat(temptimestamp, flightstring.c_str());
@@ -161,10 +161,10 @@ printf("2: %s\n",fullname);
  //strcat(temptimestamp, temptimestampstart);
  //strcat(temptimestamp,cstr);
  //HERE IS STORAGE FUNCTION
- printf("3: %s\n",fullname);
+ //printf("3: %s\n",fullname);
 
  Storage(fullname, 1, temptimestamp);
- printf("4: %s\n",fullname);
+ //printf("4: %s\n",fullname);
 
  strcpy(fullremoval,othername);
  strcat(fullremoval,cstr);
@@ -172,7 +172,7 @@ printf("2: %s\n",fullname);
  remove(fullremoval);
  picnum++;
  stored++;
- printf("5: %s\n",fullname);
+ //printf("5: %s\n",fullname);
 
 }
 
