@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
   char hr[10];
 
   printf("Imp Storage function started\n");
-
+  int firsttime = 0;
   while (1)
   {
     // std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -94,13 +94,13 @@ int main(int argc, char *argv[])
     strcat(fullname, raw);
    // printf("IMP LOOKING FOR: %s\n",fullname);
     int run = 0;
-    while (stat(fullname, &currentfilestats) != 0 && run < 5)
+    while (stat(fullname, &currentfilestats) != 0 && (run < 5 || firsttime == 0) )
     {
       std::this_thread::sleep_for(std::chrono::milliseconds(5));
       run++;
       // printf("looping in here cause it works \n");
     }
-
+    firsttime = 1;
   //std::this_thread::sleep_for(std::chrono::milliseconds(10));
 // if(firstfile == 0){
 //	originalstats = currentfilestats;
