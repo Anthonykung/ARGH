@@ -62,17 +62,12 @@ void callbosonstore(time_t currtime)
       printf("WHAT IS IT -1\n");
   bosstr[0] = "../BosonUSB/exrunusb";
       printf("WHAT IS IT 0\n");
-  stringstream ss;
-      printf("WHAT IS IT 1\n");
-  ss << currtime;
-      printf("WHAT IS IT 2\n");
-  string timestring = ss.str();
-      printf("WHAT IS IT 3\n");
-  ss.str("");
+
     printf("WHAT IS IT 4\n");
 
-  char pleasework[] = timestring.c_str();
-  bosstr[1] = pleasework;
+  char temp[15];
+  sprintf(temp,%d,currtime);
+  bosstr[1] = &temp; 
   printf("WHAT IS IT bos: %s\n",bosstr[1]);
   //snprintf(bosstr[1],15,"%i",currtime);
   bosstr[2] = NULL;
