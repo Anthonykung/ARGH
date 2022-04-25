@@ -57,12 +57,20 @@ void callbosonstore(time_t currtime)
 {
   printf("WE ARE IN THE CALL STORE BOSON\n");
   char summontheboson[] = "../BosonUSB/exrunusb";
+      printf("WHAT IS IT -2");
   char *bosstr[3];
+      printf("WHAT IS IT -1");
   bosstr[0] = "../BosonUSB/exrunusb";
+      printf("WHAT IS IT 0");
   stringstream ss;
+      printf("WHAT IS IT 1");
   ss << currtime;
+      printf("WHAT IS IT 2");
   string timestring = ss.str();
+      printf("WHAT IS IT 3");
   ss.str("");
+    printf("WHAT IS IT 4");
+
   strcpy(bosstr[1],timestring.c_str());
   printf("WHAT IS IT bos: %s",bosstr[1]);
   //snprintf(bosstr[1],15,"%i",currtime);
