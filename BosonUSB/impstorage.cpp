@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     int run = 0;
     while (stat(fullname, &currentfilestats) != 0 && (run < 5 || firsttime == 0) )
     {
-      std::this_thread::sleep_for(std::chrono::milliseconds(5));
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
       run++;
       // printf("looping in here cause it works \n");
     }
