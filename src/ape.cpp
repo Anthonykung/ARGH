@@ -157,6 +157,11 @@ int gige_controller(int &sharedStatus) {
       cout << "\033[38;2;255;20;147mGIGE Controller Started!\033[0m" << endl;
       gige_pid = fork();
       if (gige_pid == 0) {
+        FILE *fp;
+        fp = fopen("./GigE-log.txt", "a");
+        fprintf(fp, "Frame ID: %d\n", frameId);
+        fprintf(fp, "\n");
+        fclose(fp);
         shmmsg_gpio->startsignal = 0;
         execl("../IpxSDK/scripts/build/api/IpxStreamAPI", "../IpxSDK/scripts/build/api/IpxStreamAPI", NULL);
       }
