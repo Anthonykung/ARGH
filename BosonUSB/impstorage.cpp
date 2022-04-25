@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     sprintf(cstr, "%d", picnum);
     strcat(fullname, cstr);
     strcat(fullname, raw);
-    printf("IMP LOOKING FOR: %s\n",fullname);
+   // printf("IMP LOOKING FOR: %s\n",fullname);
     int run = 0;
     while (stat(fullname, &currentfilestats) != 0 && run < 5)
     {

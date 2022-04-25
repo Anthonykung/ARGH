@@ -100,7 +100,7 @@ while(1){
  strcat(fullname,cstr);
  strcat(fullname,tiff);
 
-printf("ABOUT TO LOOK FOR THIS: %s\n",fullname);
+//printf("ABOUT TO LOOK FOR THIS: %s\n",fullname);
  while(stat(fullname,&currentfilestats) != 0){
 //printf("looping in here cause it works \n");
  }
@@ -134,26 +134,26 @@ sprintf(hr,"%d",hours);
 
 string flightstring;
 
-  printf("before2: %s\n",fullname);
+ // printf("before2: %s\n",fullname);
   fstream flightfile;
-printf("23: %s\n",fullname);
+//printf("23: %s\n",fullname);
 
   flightfile.open("/home/anthony/ARGH/BosonUSB/flightnumber.txt",ios::in);
-  printf("24: %s\n",fullname);
+  //printf("24: %s\n",fullname);
 
   if(flightfile.is_open()){
-    printf("25: %s\n",fullname);
+   // printf("25: %s\n",fullname);
 
         getline(flightfile,flightstring);
-       printf("26: %s\n",fullname);
+     //  printf("26: %s\n",fullname);
 
         flightfile.close();
   }
   else{
   printf("Error opening flight number\n");
   }
-printf("flight number: %s\n",flightstring.c_str());
-printf("2: %s\n",fullname);
+//printf("flight number: %s\n",flightstring.c_str());
+//printf("2: %s\n",fullname);
 
  strcpy(temptimestamp, "Flight");
  strcat(temptimestamp, flightstring.c_str());
