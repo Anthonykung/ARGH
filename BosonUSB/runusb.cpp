@@ -136,7 +136,7 @@ string flightstring;
 
   
   fstream flightfile;
-  flightfile.open("/home/anthony/ARGH/flightnumber.txt",ios::in);
+  flightfile.open("/home/anthony/ARGH/BosonUSB/flightnumber.txt",ios::in);
   if(flightfile.is_open()){
         getline(flightfile,flightstring);
         flightfile.close();
