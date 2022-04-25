@@ -134,7 +134,7 @@ sprintf(hr,"%d",hours);
 
 string flightstring;
 
-  
+  printf("before2: %s\n",fullname);
   fstream flightfile;
   flightfile.open("/home/anthony/ARGH/BosonUSB/flightnumber.txt",ios::in);
   if(flightfile.is_open()){
@@ -144,8 +144,8 @@ string flightstring;
   else{
   printf("Error opening flight number\n");
   }
-
-//printf("2: %s\n",fullname);
+printf("flight number: %s\n",flightstring);
+printf("2: %s\n",fullname);
 
  strcpy(temptimestamp, "Flight");
  strcat(temptimestamp, flightstring.c_str());
