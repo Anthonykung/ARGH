@@ -61,7 +61,7 @@ return 3;
 
 int main(int argc, char *argv[]){
 
-int originaltime = stoi(argv[1]);
+long int originaltime = stoi(argv[1]);
 struct stat originalstats;
 struct stat currentfilestats;
 const char filename[100] = "/home/anthony/ARGH/src/Boson_320/Boson_320_agc_";
@@ -110,7 +110,7 @@ while(1){
 //	originalstats = currentfilestats;
 //	firstfile = 1;
  //}
-timepiece = currentfilestats.st_mtime * 1000 + currentfilestats.st_mtim.tv_nsec / 1000000 - originaltime * 10;//originalstats.st_mtime * 1000 + originalstats.st_mtim.tv_nsec / 1000000;
+timepiece = currentfilestats.st_mtime * 1000 + currentfilestats.st_mtim.tv_nsec / 1000000 - originaltime * 1000;//originalstats.st_mtime * 1000 + originalstats.st_mtim.tv_nsec / 1000000;
 //sprintf(timestr,"%d",timepiece);
 
 if(timepiece >= 1000){
