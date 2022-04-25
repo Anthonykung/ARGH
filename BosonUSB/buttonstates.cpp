@@ -539,7 +539,7 @@ int main()
   gpio_set_direction(250, "in");
   gpio_set_direction(248, "in");
   gpio_set_direction(354, "in");
-  remove_all("/home/anthony/Desktop/BosonUSB/Boson_320");
+  remove_all("/home/anthony/ARGH/src/Boson_320");
   remove_all("/data/Imperx");
 
   while (1)
