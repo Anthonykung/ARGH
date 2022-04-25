@@ -496,22 +496,15 @@ int main()
   // Interprocess Communication
 
   // ANTH = 2684
-  int shmid_gpio = -1;
-  while (shmid_gpio < 0) {
-    shmget(SHM_KEY_GPIO, sizeof(struct shm_gpio), IPC_CREAT | 0644);
-    if (shmid_gpio < 0)
-    {
-      std::cout << "IPC Init Failed\n"
-                << std::endl;
-      return shmid_gpio;
-    }
+  struct shm_gpio *shmmsg_gpio;
+  int shmid_wepd = shmget(SHM_KEY_GPIO, sizeof(struct shm_gpio), IPC_CREAT | 0644);
+  if (shmid_wepd < 0) {
+    printf("GPIO IPC Init Failed\n");
+    return shmid_wepd;
   }
-  
-  shmmsg_gpio = (struct shm_gpio *)shmat(shmid_gpio, NULL, 0);
-  if (shmmsg_gpio == (void *)-1)
-  {
-    std::cout << "IPC Attach Failed\n"
-              << std::endl;
+  shmmsg_gpio = (struct shm_gpio *)shmat(shmid_wepd, NULL, 0);
+  if (shmmsg_gpio == (void *) -1) {
+    printf("GPIO IPC Init Failed\n");
     return -1;
   }
 
