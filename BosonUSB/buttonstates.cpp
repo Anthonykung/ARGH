@@ -780,15 +780,17 @@ int main()
     printf("restarting\n");
     if (recordingwasstarted == 1)
     {
+      shmmsg_gpio->stat_ln = 2;
       shmmsg_gpio->killsignal = 1;
       kill(bosoncampid, SIGKILL);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      std::this_thread::sleep_for(std::chrono::milliseconds(5000));
       kill(bosonstorepid, SIGKILL);
       recordingwasstarted = 0;
       while (shmmsg_gpio->startsignal == 1)
       {
         // Waits for imprex to be killed
       }
+
       kill(impstorepid, SIGKILL);
     }
 
