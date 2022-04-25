@@ -167,3 +167,4 @@ timepiece = currentfilestats.st_mtime * 1000 + currentfilestats.st_mtim.tv_nsec 
   printf("YOOOOOOO\n");
 
   return 0;
+}
