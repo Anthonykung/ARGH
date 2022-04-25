@@ -65,13 +65,14 @@ int main(int argc, char *argv[])
   char raw[6] = ".raw";
   char fullname[100];
   char fullname2[100];
+  char fullname3[100];
   int picnum = 0;
   char temptimestampstart[20] = "PicNumber";
   char temptimestamp[100];
   char cstr[8];
   char fullremoval[100];
   int stored = 0;
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+  //std::this_thread::sleep_for(std::chrono::seconds(2));
   int firstfile = 0;
   int timepiece;
   // char timestr[20];
@@ -98,6 +99,11 @@ int main(int argc, char *argv[])
     sprintf(cstr, "%d", picnum + 1);
     strcat(fullname2, cstr);
     strcat(fullname2, raw);
+
+    strcpy(fullname2, filename);
+    sprintf(cstr, "%d", picnum + 2);
+    strcat(fullname2, cstr);
+    strcat(fullname2, raw);
    // printf("IMP LOOKING FOR: %s\n",fullname);
     //int run = 0;
     int secondnotfound = 1;
@@ -106,6 +112,12 @@ int main(int argc, char *argv[])
       if(stat(fullname2, &currentfilestats) == 0){
         secondnotfound = 0;
         strcpy(fullname,fullname2);
+        picnum++;
+      }
+       if(stat(fullname3, &currentfilestats) == 0){
+        secondnotfound = 0;
+        strcpy(fullname,fullname3);
+        picnum++;
         picnum++;
       }
     //  run++;
