@@ -53,24 +53,31 @@ int recordingwasstarted;
 using namespace std;
 using namespace std::experimental::filesystem::v1;
 
-void callbosonstore(int currtime)
+void callbosonstore(time_t currtime)
 {
   char summontheboson[] = "./exrunusb";
   char *bosstr[3];
   bosstr[0] = "./exrunusb";
-  snprintf(bosstr[1],15,"%i",currtime);
+  stringstream ss;
+  ss << currtime;
+  string timestring = ss.str();
+  strcpy(bosstr[1],timestring.c_str());
+  //snprintf(bosstr[1],15,"%i",currtime);
   bosstr[2] = NULL;
   execvp(summontheboson, bosstr);
   printf("exiting boson call\n");
   exit(0);
 }
 
-void callimpstore(int currtime)
+void callimpstore(time_t currtime)
 {
   char summontheimp[] = "./eximpstore";
   char *impstr[3];
   impstr[0] = "./eximpstore";
-  snprintf(impstr[1],15,"%i",currtime);
+  stringstream ss;
+  ss << currtime;
+  string timestring = ss.str();
+  strcpy(impstr[1],timestring.c_str());
   impstr[2] = NULL;
   execvp(summontheimp, impstr);
   printf("exiting impstore call\n");
@@ -482,6 +489,7 @@ void minuspressed()
 
 int main()
 {
+  
 
   //****************************************
 
