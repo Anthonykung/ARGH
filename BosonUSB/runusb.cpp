@@ -70,7 +70,7 @@ char tiff[6] = ".tiff";
 char fullname[100];
 int picnum = 0;
 char temptimestampstart[20] = "PicNumber";
-char temptimestamp[20];
+char temptimestamp[100];
 char cstr[8];
 char fullremoval[100];
 int stored = 0;
