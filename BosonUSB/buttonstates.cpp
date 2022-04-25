@@ -71,7 +71,7 @@ void callbosonstore(time_t currtime)
   ss.str("");
     printf("WHAT IS IT 4\n");
 
-  strcpy(bosstr[1],timestring.c_str());
+  bosstr[1] = timestring.c_str();
   printf("WHAT IS IT bos: %s\n",bosstr[1]);
   //snprintf(bosstr[1],15,"%i",currtime);
   bosstr[2] = NULL;
