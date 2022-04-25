@@ -57,18 +57,11 @@ void callbosonstore(time_t currtime)
 {
   printf("WE ARE IN THE CALL STORE BOSON\n");
   char summontheboson[] = "../BosonUSB/exrunusb";
-      printf("WHAT IS IT -2\n");
   char *bosstr[3];
-      printf("WHAT IS IT -1\n");
   bosstr[0] = "../BosonUSB/exrunusb";
-      printf("WHAT IS IT 0\n");
-
-    printf("WHAT IS IT 4\n");
-
   char temp[15];
   sprintf(temp,"%d",currtime);
   bosstr[1] = temp; 
-  printf("WHAT IS IT bos: %s\n",bosstr[1]);
   //snprintf(bosstr[1],15,"%i",currtime);
   bosstr[2] = NULL;
   execvp(summontheboson, bosstr);
@@ -82,12 +75,9 @@ void callimpstore(time_t currtime)
   char summontheimp[] = "../BosonUSB/eximpstore";
   char *impstr[3];
   impstr[0] = "../BosonUSB/eximpstore";
-  stringstream ss;
-  ss << currtime;
-  string timestring = ss.str();
-  ss.str("");
-  strcpy(impstr[1],timestring.c_str());
-  printf("WHAT IS IT imp: %s",impstr[1]);
+  char temp[15];
+  sprintf(temp,"%d",currtime);
+  impstr[1] = temp;
   impstr[2] = NULL;
   execvp(summontheimp, impstr);
   printf("exiting impstore call\n");
