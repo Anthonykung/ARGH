@@ -783,7 +783,7 @@ int main()
       shmmsg_gpio->stat_ln = 2;
       shmmsg_gpio->killsignal = 1;
       kill(bosoncampid, SIGKILL);
-      std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+      std::this_thread::sleep_for(std::chrono::milliseconds(3000));
       kill(bosonstorepid, SIGKILL);
       recordingwasstarted = 0;
       while (shmmsg_gpio->startsignal == 1)
