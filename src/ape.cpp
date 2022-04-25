@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 
   terminate = 0;
   
-  // signal(SIGINT, InterruptHandler);
+  signal(SIGINT, InterruptHandler);
 
   //****************************************
 
@@ -85,10 +85,10 @@ int main(int argc, char *argv[]) {
   int sharedStatus = 0;
   //thread thermal(temp_regulator, ref(sharedStatus));
   thread gpio(gpio_controller, ref(sharedStatus));
-  // thread display_app(display_exe, ref(sharedStatus));
-  // thread display(display_controller, ref(sharedStatus));
+  thread display_app(display_exe, ref(sharedStatus));
+  thread display(display_controller, ref(sharedStatus));
   // thread button(button_main);
-  // thread display_manager(display_state);
+  thread display_manager(display_state);
   thread gige(gige_controller, ref(sharedStatus));
   //thread usbc(usbc_controller, ref(sharedStatus));
 
@@ -98,13 +98,19 @@ int main(int argc, char *argv[]) {
   //   cv.wait(lck);
   // }
   if (terminate) {
+    kill(gige_pid, SIGKILL);
+    kill(wepd_pid, SIGKILL);
+    kill(gpio_pid, SIGKILL);
+    shmmsg_gpio->startsignal = 0;
+    shmmsg_gpio->killsignal = 0;
   }
   //thermal.join();
-  //gpio.join();
   gige.join();
   // usbc.join();
-  // display_app.join();
-  // display.join();
+  display_app.join();
+  display.join();
+  display_manager.join();
+  gpio.join();
   cout << "Exiting" << endl;
   return sharedStatus;
 }
@@ -292,6 +298,8 @@ int interactive() {
 void  InterruptHandler(int signo) {
     //System Exit
     printf("\r\nHandler:exit\r\n");
+    shmmsg_gpio->startsignal = 0;
+    shmmsg_gpio->killsignal = 0;
 
     // If Display is busy, wait for it to be free
     while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
@@ -301,6 +309,16 @@ void  InterruptHandler(int signo) {
     strcpy(shmmsg_wepd->cmd, "exit");
     // Let Display Controller know that a message is ready to be read
     shmmsg_wepd->request = 1;
+
+    // If Display is busy, wait for it to be free
+    while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
+      // Waiting For Display to be free
+    }
+
+    
+    kill(gige_pid, SIGKILL);
+    kill(wepd_pid, SIGKILL);
+    kill(gpio_pid, SIGKILL);
 
     exit(0);
 }
@@ -326,14 +344,14 @@ int display_controller(int &sharedStatus) {
   // *************************************************************************
 
   // *************************************************************************
-  // If Display is busy, wait for it to be free
-  while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
-    // Waiting For Display to be free
-  }
-  // Set command
-  strcpy(shmmsg_wepd->cmd, "exit");
-  // Let Display Controller know that a message is ready to be read
-  shmmsg_wepd->request = 1;
+  // // If Display is busy, wait for it to be free
+  // while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
+  //   // Waiting For Display to be free
+  // }
+  // // Set command
+  // strcpy(shmmsg_wepd->cmd, "exit");
+  // // Let Display Controller know that a message is ready to be read
+  // shmmsg_wepd->request = 1;
   // *************************************************************************
 
 

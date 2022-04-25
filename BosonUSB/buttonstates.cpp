@@ -498,7 +498,7 @@ int main()
   shmmsg_gpio = (struct shm_gpio *)shmat(shmid_gpio, NULL, 0);
   if (shmmsg_gpio == (void *)-1)
   {
-    std::cout << "IPC Init Failed\n"
+    std::cout << "IPC Attach Failed\n"
               << std::endl;
     return -1;
   }

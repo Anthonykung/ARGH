@@ -1,0 +1,30 @@
+Busy: 0
+Request: 1
+Line: 0
+CMD: init
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: write
+MSG: Waiting...
+
+Busy: 0
+Request: 1
+Line: 1
+CMD: write
+MSG:   Start/Stop Recording
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: init
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: write
+MSG: Waiting...
+
