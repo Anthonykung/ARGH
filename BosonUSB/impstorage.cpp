@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     strcat(fullname, raw);
     printf("IMP LOOKING FOR: %s\n",fullname);
     int run = 0;
-    while (stat(fullname, &currentfilestats) != 0 && run < 10)
+    while (stat(fullname, &currentfilestats) != 0 && run < 5)
     {
       std::this_thread::sleep_for(std::chrono::milliseconds(5));
       run++;
