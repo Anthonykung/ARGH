@@ -503,13 +503,13 @@ int display_state() {
 
   switch (shmmsg_gpio->delay_ln) {
     case 0:
-      display_write(2, "  Preset Delay" + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
+      display_write(2, "  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + " : " + to_string((shmmsg_gpio->delay_sec%3600)/60) + " : " + to_string(shmmsg_gpio->delay_sec%60));
       break;
     case 1:
-      display_write(2, ">  Preset Delay" + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
+      display_write(2, ">  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + " : " + to_string((shmmsg_gpio->delay_sec%3600)/60) + " : " + to_string(shmmsg_gpio->delay_sec%60));
       break;
     case 2:
-      display_write(2, ">  Preset Delay" + to_string(shmmsg_gpio->delay_config/3600) + ":" + to_string((shmmsg_gpio->delay_config%3600)/60) + ":" + to_string(shmmsg_gpio->delay_config%60));
+      display_write(2, ">  Preset Delay " + to_string(shmmsg_gpio->delay_config/3600) + " : " + to_string((shmmsg_gpio->delay_config%3600)/60) + " : " + to_string(shmmsg_gpio->delay_config%60));
       break;
     default:
       display_write(2, "ERROR");
@@ -518,13 +518,13 @@ int display_state() {
 
   switch (shmmsg_gpio->record_ln) {
     case 0:
-      display_write(3, "  Recording Time" + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
+      display_write(3, "  Recording Time " + to_string(shmmsg_gpio->record_sec/3600) + " : " + to_string((shmmsg_gpio->record_sec%3600)/60) + " : " + to_string(shmmsg_gpio->record_sec%60));
       break;
     case 1:
-      display_write(3, "> Recording Time" + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
+      display_write(3, "> Recording Time " + to_string(shmmsg_gpio->record_sec/3600) + " : " + to_string((shmmsg_gpio->record_sec%3600)/60) + " : " + to_string(shmmsg_gpio->record_sec%60));
       break;
     case 2:
-      display_write(3, "> Recording Time" + to_string(shmmsg_gpio->record_config/3600) + ":" + to_string((shmmsg_gpio->record_config%3600)/60) + ":" + to_string(shmmsg_gpio->record_config%60));
+      display_write(3, "> Recording Time " + to_string(shmmsg_gpio->record_config/3600) + " : " + to_string((shmmsg_gpio->record_config%3600)/60) + " : " + to_string(shmmsg_gpio->record_config%60));
       break;
     default:
       display_write(3, "ERROR");

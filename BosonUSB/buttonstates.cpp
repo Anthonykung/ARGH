@@ -129,7 +129,7 @@ int gpio_get_state(int gpio)
   }
   gpio_state.close();
   //  cout << "GPIO State: " << state << endl;
-  printf("GETSTATE STOI \n");
+  // printf("GETSTATE STOI \n");
   return stoi(state);
 }
 // Power loss during this any issues?
@@ -561,6 +561,7 @@ int main()
     }
     printf("record2 STOI \n");
     shmmsg_gpio->record_sec = stoi(recordstring);
+    cout << "record_sec: " << shmmsg_gpio->record_sec << endl;
 
     string delaytime;
 
