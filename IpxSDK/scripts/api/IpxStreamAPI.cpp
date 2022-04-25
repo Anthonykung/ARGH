@@ -582,7 +582,7 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                         g_result = filename;
                         FILE *fp;
                         fp = fopen("./GigE-log.txt", "a");
-                        fprintf(fp, "In KILL: %d\n", shmmsg_gpio->killsignal);
+                        fprintf(fp, "Frame ID: %d\n", frameId);
                         fprintf(fp, "\n");
                         fclose(fp);
 
