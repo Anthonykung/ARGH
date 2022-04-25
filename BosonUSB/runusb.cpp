@@ -42,7 +42,7 @@ strcat(cmdstr, newname);
 system(cmdstr);
 remove(oldname);
 strcpy(oldmoved,newname);
-strcat(oldmoved,oldname + 38); //THIS WILL NEED CHANGING
+strcat(oldmoved,oldname + 12); //THIS WILL NEED CHANGING
 strcat(newname,camerastr);
 strcat(newname,"_");
 strcat(newname,timestamp);
@@ -63,8 +63,8 @@ int main(int argc, char *argv[]){
 int originaltime = stoi(argv[1]);
 struct stat originalstats;
 struct stat currentfilestats;
-char filename[100] = "/home/anthony/ARGH/BosonUSB/Boson_320/Boson_320_agc_";
-char othername[100] = "/home/anthony/ARGH/BosonUSB/Boson_320/Boson_320_raw16_";
+char filename[100] = "./Boson_320/Boson_320_agc_";
+char othername[100] = "./Boson_320/Boson_320_raw16_";
 char tiff[6] = ".tiff";
 char fullname[100];
 int picnum = 0;
