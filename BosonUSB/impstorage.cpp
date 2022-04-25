@@ -130,7 +130,7 @@ timepiece = currentfilestats.st_mtime * 1000 + currentfilestats.st_mtim.tv_nsec 
     string flightstring;
 
     fstream flightfile;
-    flightfile.open("flightnumber.txt", ios::in);
+    flightfile.open("/home/anthony/ARGH/flightnumber.txt", ios::in);
     if (flightfile.is_open())
     {
       getline(flightfile, flightstring);
