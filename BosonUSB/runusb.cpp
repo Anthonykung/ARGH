@@ -16,6 +16,7 @@
 
 using namespace std;
 int Storage(char* oldname, int camnum, char* timestamp){
+printf("STORAGE FOR PIC: %s\n", oldname);
 char newname[100] = "/media/anthony/CapstoneSSD/";
 char camerastr[7] = "Camera";
 char cstr[8];
