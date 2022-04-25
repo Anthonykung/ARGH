@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
   // char othername[100] = "/home/anthony/ARGH/BosonUSB/Boson_320/Boson_320_raw16_";
   char raw[6] = ".raw";
   char fullname[100];
+  char fullname2[100];
   int picnum = 0;
   char temptimestampstart[20] = "PicNumber";
   char temptimestamp[100];
@@ -83,7 +84,7 @@ int main(int argc, char *argv[])
   char hr[10];
 
   printf("Imp Storage function started\n");
-  int firsttime = 0;
+  //int firsttime = 0;
   while (1)
   {
     // std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -92,15 +93,25 @@ int main(int argc, char *argv[])
     sprintf(cstr, "%d", picnum);
     strcat(fullname, cstr);
     strcat(fullname, raw);
+
+    strcpy(fullname2, filename);
+    sprintf(cstr, "%d", picnum + 1);
+    strcat(fullname2, cstr);
+    strcat(fullname2, raw);
    // printf("IMP LOOKING FOR: %s\n",fullname);
-    int run = 0;
-    while (stat(fullname, &currentfilestats) != 0 && (run < 5 || firsttime == 0) )
+    //int run = 0;
+    int secondnotfound = 1;
+    while (stat(fullname, &currentfilestats) != 0 && secondnotfound == 1)
     {
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      run++;
+      if(stat(fullname2, &currentfilestats) == 0){
+        secondnotfound = 0;
+        strcpy(fullname,fullname2);
+        picnum++;
+      }
+    //  run++;
       // printf("looping in here cause it works \n");
     }
-    firsttime = 1;
+   // firsttime = 1;
   //std::this_thread::sleep_for(std::chrono::milliseconds(10));
 // if(firstfile == 0){
 //	originalstats = currentfilestats;
