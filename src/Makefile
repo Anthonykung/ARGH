@@ -110,3 +110,16 @@ zip:
 	-x $(BDIR)/* \
 	-x logs/* \
 	-x .git/*
+
+.PHONY: build
+build:
+	cd ../BosonUSB
+	g++ buttonstates.cpp -o exstates -lstdc++fs
+	g++ impstorage.cpp -o eximpstore
+	g++ runusb.cpp  -o exrunusb
+.PHONY : build
+
+.PHONY: test
+test:
+	echo "5" > ../BosonUSB/timeddelay.txt
+	echo "10" > ../BosonUSB/recordingtime.txt

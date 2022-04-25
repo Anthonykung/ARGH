@@ -181,3 +181,8 @@ build_caden_stuff:
 	g++ impstorage.cpp -o eximpstore
 	g++ runusb.cpp  -o exrunusb
 .PHONY : build_caden_stuff
+
+update_caden_stuff:
+	echo "5" > ../BosonUSB/timeddelay.txt
+	echo "10" > ../BosonUSB/recordingtime.txt
+.PHONY: update_caden_stuff
