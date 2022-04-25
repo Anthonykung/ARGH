@@ -480,7 +480,7 @@ void minuspressed()
   }
 }
 
-int button_main()
+int main()
 {
 
   //****************************************
