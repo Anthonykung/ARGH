@@ -55,9 +55,9 @@ using namespace std::experimental::filesystem::v1;
 
 void callbosonstore(time_t currtime)
 {
-  char summontheboson[] = "./exrunusb";
+  char summontheboson[] = "../BosonUSB/exrunusb";
   char *bosstr[3];
-  bosstr[0] = "./exrunusb";
+  bosstr[0] = "../BosonUSB/exrunusb";
   stringstream ss;
   ss << currtime;
   string timestring = ss.str();
@@ -71,9 +71,9 @@ void callbosonstore(time_t currtime)
 
 void callimpstore(time_t currtime)
 {
-  char summontheimp[] = "./eximpstore";
+  char summontheimp[] = "../BosonUSB/eximpstore";
   char *impstr[3];
-  impstr[0] = "./eximpstore";
+  impstr[0] = "../BosonUSB/eximpstore";
   stringstream ss;
   ss << currtime;
   string timestring = ss.str();
@@ -87,9 +87,9 @@ void callimpstore(time_t currtime)
 void callbosoncam()
 {
   //printf("ARE WE EVEN GETTING HERE???????????\n");
-  char commandboson[] = "./BosonUSB"; // removed t1000
+  char commandboson[] = "../BosonUSB/BosonUSB"; // removed t1000
   char *fstr[3];
-  fstr[0] = "./BosonUSB";
+  fstr[0] = "../BosonUSB/BosonUSB";
   fstr[1] = "f";
   fstr[2] = NULL;
   execvp(commandboson, fstr);
