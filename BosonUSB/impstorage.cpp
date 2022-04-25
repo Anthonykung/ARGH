@@ -93,8 +93,11 @@ int main(int argc, char *argv[])
     strcat(fullname, cstr);
     strcat(fullname, raw);
     printf("IMP LOOKING FOR: %s\n",fullname);
-    while (stat(fullname, &currentfilestats) != 0)
+    int run = 0;
+    while (stat(fullname, &currentfilestats) != 0 && run < 10)
     {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      run++;
       // printf("looping in here cause it works \n");
     }
 
@@ -130,16 +133,14 @@ timepiece = currentfilestats.st_mtime * 1000 + currentfilestats.st_mtim.tv_nsec 
     string flightstring;
 
     fstream flightfile;
-    flightfile.open("/home/anthony/ARGH/flightnumber.txt", ios::in);
-    if (flightfile.is_open())
-    {
-      getline(flightfile, flightstring);
-      flightfile.close();
-    }
-    else
-    {
-      printf("Error opening flight number\n");
-    }
+  flightfile.open("/home/anthony/ARGH/flightnumber.txt",ios::in);
+  if(flightfile.is_open()){
+        getline(flightfile,flightstring);
+        flightfile.close();
+  }
+  else{
+  printf("Error opening flight number\n");
+  }
 
     strcpy(temptimestamp, "Flight");
     strcat(temptimestamp, flightstring.c_str());
