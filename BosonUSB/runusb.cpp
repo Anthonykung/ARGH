@@ -110,7 +110,7 @@ while(1){
 //	originalstats = currentfilestats;
 //	firstfile = 1;
  //}
-timepiece = currentfilestats.st_mtime * 1000 + currentfilestats.st_mtim.tv_nsec / 1000000 - originaltime * 100;//originalstats.st_mtime * 1000 + originalstats.st_mtim.tv_nsec / 1000000;
+timepiece = currentfilestats.st_mtime * 1000 + currentfilestats.st_mtim.tv_nsec / 1000000 - originaltime * 10;//originalstats.st_mtime * 1000 + originalstats.st_mtim.tv_nsec / 1000000;
 //sprintf(timestr,"%d",timepiece);
 
 if(timepiece >= 1000){
