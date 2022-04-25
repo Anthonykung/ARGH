@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
   while (true) {
     if (shmmsg_gpio->killsignal == 1) {
       kill(gige_pid, SIGKILL);
-      cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
+      // cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
       shmmsg_gige->started == 0;
       shmmsg_gpio->killsignal == 0;
     }
@@ -163,7 +163,7 @@ int gige_controller(int &sharedStatus) {
     }
     if (shmmsg_gpio->killsignal == 1) {
       kill(gige_pid, SIGKILL);
-      cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
+      // cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
       shmmsg_gige->started == 0;
       shmmsg_gpio->killsignal == 0;
     }

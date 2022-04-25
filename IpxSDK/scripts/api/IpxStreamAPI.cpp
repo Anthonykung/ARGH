@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
   //****************************************
     
     // while (shmmsg_gige->exit == 0) {
-        std::cout << "Waiting for start signal" << std::endl;
+        // std::cout << "Waiting for start signal" << std::endl;
         // If request check request
         // if (shmmsg_gige->request) {
             shmmsg_gige->request = 0;
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
             if (system) {
                 while (true) {
                     shmmsg_gige->started = 1;
-                    std::cout << "Started!" << std::endl;
+                    // std::cout << "Started!" << std::endl;
                     // Select desired interface
                     auto iface = SelectInterface(system);
                     if (iface) {
@@ -581,13 +581,13 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                         snprintf(filename, 200, "/data/Imperx/GigE-Frame-%" PRIu64 ".raw", frameId - 1);
                         g_result = filename;
 
-                        std::cout << "OK FID:"  << std::uppercase << std::hex << std::setfill('0') << std::setw(16) << frameId << " "
-                            << std::dec << std::setfill(' ') << std::setw(4) << buffer->GetWidth()<< "W "
-                            << std::dec << std::setfill(' ') << std::setw(4) << buffer->GetHeight()<< "H "
-                            << std::setfill(' ') << std::setw(7) << std::setprecision(2) << std::fixed << fps << "FPS "
-                            << std::setfill(' ') << std::setw(7) << bandwidth << "MB/s"
-                            << " inc:" << incomplete << " dr:" << droped << " "
-                            << "Frame Location: " << filename << "\r" << std::flush;
+                        // std::cout << "OK FID:"  << std::uppercase << std::hex << std::setfill('0') << std::setw(16) << frameId << " "
+                        //     << std::dec << std::setfill(' ') << std::setw(4) << buffer->GetWidth()<< "W "
+                        //     << std::dec << std::setfill(' ') << std::setw(4) << buffer->GetHeight()<< "H "
+                        //     << std::setfill(' ') << std::setw(7) << std::setprecision(2) << std::fixed << fps << "FPS "
+                        //     << std::setfill(' ') << std::setw(7) << bandwidth << "MB/s"
+                        //     << " inc:" << incomplete << " dr:" << droped << " "
+                        //     << "Frame Location: " << filename << "\r" << std::flush;
 
                         // save each i(th) file
                         // if (every && (i % every) == 0) {
