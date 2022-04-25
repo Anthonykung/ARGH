@@ -144,7 +144,7 @@ string flightstring;
   else{
   printf("Error opening flight number\n");
   }
-printf("flight number: %s\n",flightstring);
+printf("flight number: %s\n",flightstring.c_str());
 printf("2: %s\n",fullname);
 
  strcpy(temptimestamp, "Flight");
