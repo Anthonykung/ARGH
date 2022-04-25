@@ -74,6 +74,7 @@ struct shm_gige {
     int busy;
     int request;
     int start;
+    int started;
     int exit;
     int num_devices;
     char identifier[DEVICES][STR_SIZE];
@@ -87,15 +88,12 @@ struct shm_gpio {
     int record_ln;
     int prev_ln;
     int info_ln;
-    int previous_stat;
     int delay_config;
     int record_config;
-    int needsrestart;
     int delay_sec;
     int record_sec;
-    pid_t bosonstorepid;
-    pid_t bosoncampid;
-    int recordingwasstarted;
+    int startsignal;
+    int killsignal;
 };
 
 // Declare Global Variables
@@ -105,6 +103,9 @@ struct shm_wepd *shmmsg_wepd;
 struct shm_gige *shmmsg_gige;
 struct shm_gpio *shmmsg_gpio;
 int wepd_pid;
+int gige_pid;
+int gpio_pid;
+int terminate;
 
 // Declare Functions
 int fan_control(int fan_speed);

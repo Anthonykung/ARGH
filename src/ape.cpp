@@ -17,8 +17,10 @@
 
 int main(int argc, char *argv[]) {
   cout << "APE Started!" << endl;
+
+  terminate = 0;
   
-  signal(SIGINT, InterruptHandler);
+  // signal(SIGINT, InterruptHandler);
 
   //****************************************
 
@@ -42,7 +44,7 @@ int main(int argc, char *argv[]) {
 
   //****************************************
 
-  // Interprocess Communication
+  // Interprocess Communication GIGE Camera
 
   // ANTH = 2684
   int shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct shm_gige), IPC_CREAT | 0644);
@@ -57,12 +59,13 @@ int main(int argc, char *argv[]) {
   }
 
   shmmsg_gige->busy = 1;
+  shmmsg_gige->started = 0;
 
   //****************************************
 
   //****************************************
 
-  // Interprocess Communication
+  // Interprocess Communication GPIO Operations
 
   // ANTH = 2684
   int shmid_gpio = shmget(SHM_KEY_GPIO, sizeof(struct shm_gpio), IPC_CREAT | 0644);
@@ -81,25 +84,27 @@ int main(int argc, char *argv[]) {
 
   int sharedStatus = 0;
   //thread thermal(temp_regulator, ref(sharedStatus));
-  //thread gpio(gpio_controller, ref(sharedStatus));
-  thread display_app(display_exe, ref(sharedStatus));
-  thread display(display_controller, ref(sharedStatus));
+  thread gpio(gpio_controller, ref(sharedStatus));
+  // thread display_app(display_exe, ref(sharedStatus));
+  // thread display(display_controller, ref(sharedStatus));
   // thread button(button_main);
   // thread display_manager(display_state);
-  //thread gige(gige_controller, ref(sharedStatus));
+  thread gige(gige_controller, ref(sharedStatus));
   //thread usbc(usbc_controller, ref(sharedStatus));
 
 
-  unique_lock<mutex> lck(mtx);
-  while (sharedStatus < 2) {
-    cv.wait(lck);
+  // unique_lock<mutex> lck(mtx);
+  // while (sharedStatus < 2) {
+  //   cv.wait(lck);
+  // }
+  if (terminate) {
   }
   //thermal.join();
   //gpio.join();
-  // gige.join();
+  gige.join();
   // usbc.join();
-  display_app.join();
-  display.join();
+  // display_app.join();
+  // display.join();
   cout << "Exiting" << endl;
   return sharedStatus;
 }
@@ -108,32 +113,31 @@ int gige_controller(int &sharedStatus) {
   unique_lock<mutex> lck(mtx);
   sharedStatus += 1;
   cv.notify_one();
-
-  shmmsg_gige->start = 1;
-  shmmsg_gige->num_devices = 0;
-  shmmsg_gige->path[0] = '\0';
+  while (shmmsg_gige->request == 1) {
+    if (shmmsg_gpio->startsignal == 1 && shmmsg_gige->started == 0) {
+      cout << "GIGE Controller Started!" << endl;
+      gige_pid = fork();
+      if (gige_pid == 0) {
+        execl("../IpxSDK/IpxGigE.sh", "../IpxSDK/IpxGigE.sh", NULL);
+      }
+    }
+    else if (gige_pid == 1 && shmmsg_gpio->killsignal == 1) {
+      cout << "GIGE Controller Killed!" << endl;
+      kill(gige_pid, SIGKILL);
+    }
+  }
+  
   return 0;
 }
 
 int gpio_controller(int &sharedStatus) {
-  //unique_lock<mutex> lck(mtx);
-  //sharedStatus += 1;
-  //cv.notify_one();
-  gpio_export(422);  // PIN 7
-  gpio_export(248);  // PIN 33
-  gpio_set_direction(422, "in");
-  gpio_set_direction(248, "out");
-  for (int i = 0; i < 100; i++) {
-    gpio_set_state(248, "1");
-    cout << gpio_get_state(422) << endl;
-    usleep(100);
-    gpio_set_state(248, "0");
-    cout << gpio_get_state(422) << endl;
-    usleep(100);
+  unique_lock<mutex> lck(mtx);
+  sharedStatus += 1;
+  cv.notify_one();
+  gpio_pid = fork();
+  if (gpio_pid == 0) {
+    execl("../BosonUSB/exstates", "../BosonUSB/exstates", NULL);
   }
-  gpio_unexport(248);
-  gpio_unexport(422);
-  cout << "GPIO Controller Terminated" << endl;
   return 0;
 }
 
@@ -376,7 +380,7 @@ int display_controller(int &sharedStatus) {
     else {
       sleep(1);
       display_timer++;
-      display_write(11, "Refresh Timer: " + to_string(display_timer));
+      // display_write(11, "Refresh Timer: " + to_string(display_timer));
       if (display_timer == 60) {
         display_interval++;
         display_timer = 0;
@@ -457,6 +461,9 @@ int display_state() {
       break;
     case 3:
       display_write(0, "Configuring...");
+      break;
+    case 4:
+      display_write(0, "Configuring Camera...");
       break;
     default:
       display_write(0, "ERROR");

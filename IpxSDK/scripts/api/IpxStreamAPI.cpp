@@ -13,7 +13,56 @@
  * 
  */
 
-#include "IpxStreamAPI.hpp"
+#include "IpxStreamAPI.h"
+
+#include <vector>
+#include <string>
+#include <atomic>
+#include <thread>
+#include <limits>
+#include <cstring>
+#include <sstream>
+#include <iomanip>
+#include <iostream>
+#include <cinttypes>
+#include <algorithm>
+#include <chrono>
+#include <ctime>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+// Function Prototypes
+IpxCam::Interface *SelectInterface( IpxCam::System *system );
+IpxCam::DeviceInfo *SelectDevice( IpxCam::Interface *iface, int deviceIndex );
+void GetSetParams( IpxCam::Device *device );
+std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream );
+void FreeDataStreamBuffers( IpxCam::Stream *stream, std::vector<IpxCam::Buffer *> *buffers );
+const char* GetAccessStatusStr( int32_t status );
+std::vector<std::string> split(const std::string& s, char delimiter);
+bool SetIpAddress( IpxCam::DeviceInfo* iface );
+uint32_t ValidateIpAddress( const std::string &ipAddress );
+int GetConnectedDevices(IpxCam::Interface *iface);
+
+// sync values
+std::atomic_bool g_isStop(false);
+std::string g_result = "";
+
+#define SHM_KEY_GIGE 0x4443
+#define STR_SIZE 1000
+#define DEVICES 5
+
+struct shm_gige {
+    int busy;
+    int request;
+    int start;
+    int started;
+    int exit;
+    int num_devices;
+    char identifier[DEVICES][STR_SIZE];
+    char path[STR_SIZE];
+};
+
+struct shm_gige *shmmsg_gige;
 
 // Main function
 int main(int argc, char *argv[]) {
@@ -47,6 +96,7 @@ int main(int argc, char *argv[]) {
             auto system = IpxCam::IpxCam_GetSystem();
             if (system) {
                 while (shmmsg_gige->start) {
+                    shmmsg_gige->started = 1;
                     // Select desired interface
                     auto iface = SelectInterface(system);
                     if (iface) {
@@ -511,7 +561,8 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
 
                         char filename[200];
                         uint64_t timestampStr = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-                        snprintf(filename, 200, "/data/Imperx/GigE-Frame-%lu.raw", timestampStr);
+                        // snprintf(filename, 200, "/data/Imperx/GigE-Frame-%lu.raw", timestampStr);
+                        snprintf(filename, 200, "/data/Imperx/GigE-Frame-%" PRIu64 ".raw", frameId);
                         g_result = filename;
 
                         std::cout << "OK FID:"  << std::uppercase << std::hex << std::setfill('0') << std::setw(16) << frameId << " "
