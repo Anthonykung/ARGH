@@ -578,7 +578,7 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                         char filename[200];
                         uint64_t timestampStr = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
                         // snprintf(filename, 200, "/data/Imperx/GigE-Frame-%lu.raw", timestampStr);
-                        snprintf(filename, 200, "/data/Imperx/GigE-Frame-%" PRIu64 ".raw", frameId);
+                        snprintf(filename, 200, "/data/Imperx/GigE-Frame-%" PRIu64 ".raw", frameId - 1);
                         g_result = filename;
 
                         std::cout << "OK FID:"  << std::uppercase << std::hex << std::setfill('0') << std::setw(16) << frameId << " "
@@ -590,15 +590,14 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                             << "Frame Location: " << filename << "\r" << std::flush;
 
                         // save each i(th) file
-                        if (every && (i % every) == 0)
-                        {
+                        // if (every && (i % every) == 0) {
                             FILE *fp = fopen(filename, "wb");
                             if (fp)
                             {
                                 fwrite(imagePtr, sizeof(char), buffer->GetBufferSize(), fp);
                                 fclose(fp);
                             }
-                        }
+                        // }
 
                         // re-queue the buffer in the stream object
                         stream->QueueBuffer(buffer);

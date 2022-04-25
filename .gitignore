@@ -39,3 +39,14 @@ build
 
 # Ignore
 IGNORE
+
+# Images
+*.bmp
+*.gif
+*.jpg
+*.jpeg
+*.png
+*.tif
+*.tiff
+*.ico
+*.raw

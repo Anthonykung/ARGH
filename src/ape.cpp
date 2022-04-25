@@ -78,14 +78,16 @@ int main(int argc, char *argv[]) {
       std::cout << "IPC Init Failed\n" << std::endl;
       return -1;
   }
+
+  shmmsg_gpio->killsignal = 0;
   
   //****************************************
 
 
   int sharedStatus = 0;
   //thread thermal(temp_regulator, ref(sharedStatus));
-  thread gige(gige_controller, ref(sharedStatus));
   thread gpio(gpio_controller, ref(sharedStatus));
+  thread gige(gige_controller, ref(sharedStatus));
   thread display_app(display_exe, ref(sharedStatus));
   thread display(display_controller, ref(sharedStatus));
   // thread button(button_main);
@@ -97,13 +99,33 @@ int main(int argc, char *argv[]) {
   // while (sharedStatus < 2) {
   //   cv.wait(lck);
   // }
-  if (terminate) {
-    kill(gige_pid, SIGKILL);
-    kill(wepd_pid, SIGKILL);
-    kill(gpio_pid, SIGKILL);
-    shmmsg_gpio->startsignal = 0;
-    shmmsg_gpio->killsignal = 0;
+  // while (shmmsg_gpio->killsignal == 0) {
+  //   /* code */
+  // }
+  
+  // if (shmmsg_gpio->killsignal == 1) {
+  //     FILE *fp;
+  //     fp = fopen("./APE-log.txt", "a");
+  //     fprintf(fp, "In KILL: %d\n", shmmsg_gpio->killsignal);
+  //     fprintf(fp, "\n");
+  //     fclose(fp);
+  //   kill(gige_pid, SIGKILL);
+  //   // kill(wepd_pid, SIGKILL);
+  //   // kill(gpio_pid, SIGKILL);
+  //   shmmsg_gpio->startsignal = 0;
+  //   shmmsg_gpio->killsignal = 0;
+  // }
+
+  
+  while (true) {
+    if (shmmsg_gpio->killsignal == 1) {
+      kill(gige_pid, SIGKILL);
+      cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
+      shmmsg_gige->started == 0;
+      shmmsg_gpio->killsignal == 0;
+    }
   }
+  
   //thermal.join();
   gige.join();
   // usbc.join();
@@ -124,8 +146,14 @@ int gige_controller(int &sharedStatus) {
   // shmmsg_gige->started = 0;
   // shmmsg_gige->request = 1;
   // shmmsg_gige->start = 1;
-  while (shmmsg_gpio->startsignal != 1) {
-    if (shmmsg_gpio->startsignal == 1) {
+  // shmmsg_gige->started == 0 && shmmsg_gpio->killsignal == 0
+  while (true) {
+      // FILE *fp;
+      // fp = fopen("./GigE-log.txt", "a");
+      // fprintf(fp, "shmmsg_gpio->startsignal: %d\n", shmmsg_gpio->startsignal);
+      // fprintf(fp, "\n");
+      // fclose(fp);
+    if (shmmsg_gpio->startsignal == 1 && shmmsg_gige->started == 0) {
       cout << "\033[38;2;255;20;147mGIGE Controller Started!\033[0m" << endl;
       gige_pid = fork();
       if (gige_pid == 0) {
@@ -133,7 +161,14 @@ int gige_controller(int &sharedStatus) {
         execl("../IpxSDK/scripts/build/api/IpxStreamAPI", "../IpxSDK/scripts/build/api/IpxStreamAPI", NULL);
       }
     }
+    if (shmmsg_gpio->killsignal == 1) {
+      kill(gige_pid, SIGKILL);
+      cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
+      shmmsg_gige->started == 0;
+      shmmsg_gpio->killsignal == 0;
+    }
   }
+  
   // if (shmmsg_gpio->startsignal) {
   //   cout << "\033[38;2;255;20;147mGIGE Controller Started!\033[0m" << endl;
   //   gige_pid = fork();
@@ -146,12 +181,6 @@ int gige_controller(int &sharedStatus) {
   //   cout << "GIGE Controller Killed!" << endl;
   //   kill(gige_pid, SIGKILL);
   // }
-  while (shmmsg_gige->started != 1) {
-    
-  }
-  while (shmmsg_gige->started == 1) {
-    
-  }
   
   return 0;
 }
@@ -319,26 +348,26 @@ int interactive() {
 void  InterruptHandler(int signo) {
     //System Exit
     printf("\r\nHandler:exit\r\n");
-    shmmsg_gpio->startsignal = 0;
-    shmmsg_gpio->killsignal = 0;
+    // shmmsg_gpio->startsignal = 0;
+    // shmmsg_gpio->killsignal = 0;
 
-    // If Display is busy, wait for it to be free
-    while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
-      // Waiting For Display to be free
-    }
-    // Set command
-    strcpy(shmmsg_wepd->cmd, "exit");
-    // Let Display Controller know that a message is ready to be read
-    shmmsg_wepd->request = 1;
+    // // If Display is busy, wait for it to be free
+    // while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
+    //   // Waiting For Display to be free
+    // }
+    // // Set command
+    // strcpy(shmmsg_wepd->cmd, "exit");
+    // // Let Display Controller know that a message is ready to be read
+    // shmmsg_wepd->request = 1;
 
-    // If Display is busy, wait for it to be free
-    while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
-      // Waiting For Display to be free
-    }
+    // // If Display is busy, wait for it to be free
+    // while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
+    //   // Waiting For Display to be free
+    // }
 
     
-    kill(gige_pid, SIGKILL);
     kill(wepd_pid, SIGKILL);
+    kill(gige_pid, SIGKILL);
     kill(gpio_pid, SIGKILL);
 
     exit(0);
@@ -523,13 +552,13 @@ int display_state() {
 
   switch (shmmsg_gpio->delay_ln) {
     case 0:
-      display_write(2, "  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + " : " + to_string((shmmsg_gpio->delay_sec%3600)/60) + " : " + to_string(shmmsg_gpio->delay_sec%60));
+      display_write(2, "  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
       break;
     case 1:
-      display_write(2, ">  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + " : " + to_string((shmmsg_gpio->delay_sec%3600)/60) + " : " + to_string(shmmsg_gpio->delay_sec%60));
+      display_write(2, ">  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
       break;
     case 2:
-      display_write(2, ">  Preset Delay " + to_string(shmmsg_gpio->delay_config/3600) + " : " + to_string((shmmsg_gpio->delay_config%3600)/60) + " : " + to_string(shmmsg_gpio->delay_config%60));
+      display_write(2, ">  Preset Delay " + to_string(shmmsg_gpio->delay_config/3600) + ":" + to_string((shmmsg_gpio->delay_config%3600)/60) + ":" + to_string(shmmsg_gpio->delay_config%60));
       break;
     default:
       display_write(2, "ERROR");
@@ -538,13 +567,13 @@ int display_state() {
 
   switch (shmmsg_gpio->record_ln) {
     case 0:
-      display_write(3, "  Recording Time " + to_string(shmmsg_gpio->record_sec/3600) + " : " + to_string((shmmsg_gpio->record_sec%3600)/60) + " : " + to_string(shmmsg_gpio->record_sec%60));
+      display_write(3, "  Recording Time " + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
       break;
     case 1:
-      display_write(3, "> Recording Time " + to_string(shmmsg_gpio->record_sec/3600) + " : " + to_string((shmmsg_gpio->record_sec%3600)/60) + " : " + to_string(shmmsg_gpio->record_sec%60));
+      display_write(3, "> Recording Time " + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
       break;
     case 2:
-      display_write(3, "> Recording Time " + to_string(shmmsg_gpio->record_config/3600) + " : " + to_string((shmmsg_gpio->record_config%3600)/60) + " : " + to_string(shmmsg_gpio->record_config%60));
+      display_write(3, "> Recording Time " + to_string(shmmsg_gpio->record_config/3600) + ":" + to_string((shmmsg_gpio->record_config%3600)/60) + ":" + to_string(shmmsg_gpio->record_config%60));
       break;
     default:
       display_write(3, "ERROR");
