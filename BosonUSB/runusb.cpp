@@ -136,7 +136,7 @@ string flightstring;
 
   
   fstream flightfile;
-  flightfile.open("flightnumber.txt",ios::in);
+  flightfile.open("/home/anthony/ARGH/flightnumber.txt",ios::in);
   if(flightfile.is_open()){
         getline(flightfile,flightstring);
         flightfile.close();
@@ -145,7 +145,7 @@ string flightstring;
   printf("Error opening flight number\n");
   }
 
-
+printf("2: %s\n",fullname);
 
  strcpy(temptimestamp, "Flight");
  strcat(temptimestamp, flightstring.c_str());
@@ -161,13 +161,19 @@ string flightstring;
  //strcat(temptimestamp, temptimestampstart);
  //strcat(temptimestamp,cstr);
  //HERE IS STORAGE FUNCTION
+ printf("3: %s\n",fullname);
+
  Storage(fullname, 1, temptimestamp);
+ printf("4: %s\n",fullname);
+
  strcpy(fullremoval,othername);
  strcat(fullremoval,cstr);
  strcat(fullremoval,tiff);
  remove(fullremoval);
  picnum++;
  stored++;
+ printf("5: %s\n",fullname);
+
 }
 
 
