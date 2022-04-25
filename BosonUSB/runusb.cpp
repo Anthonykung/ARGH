@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
 int originaltime = stoi(argv[1]);
 struct stat originalstats;
 struct stat currentfilestats;
-char filename[100] = "/home/anthony/ARGH/src/Boson_320/Boson_320_agc_";
+const char filename[100] = "/home/anthony/ARGH/src/Boson_320/Boson_320_agc_";
 char othername[100] = "/home/anthony/ARGH/src/Boson_320/Boson_320_raw16_";
 char tiff[6] = ".tiff";
 char fullname[100];
