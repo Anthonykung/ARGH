@@ -790,7 +790,7 @@ int main()
       {
         // Waits for imprex to be killed
       }
-      std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+      //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
       kill(impstorepid, SIGKILL);
     }
 
