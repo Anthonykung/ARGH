@@ -1,0 +1,3 @@
+/home/caden/Desktop/BosonUSB/CMakeFiles/rebuild_cache.dir
+/home/caden/Desktop/BosonUSB/CMakeFiles/BosonUSB.dir
+/home/caden/Desktop/BosonUSB/CMakeFiles/edit_cache.dir
