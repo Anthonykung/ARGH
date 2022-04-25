@@ -24,6 +24,8 @@
 #define SHM_KEY 0x9373
 #define STR_SIZE 1000
 
+FILE *fp;
+
 struct shm_wepd {
   int request;
   int busy;
@@ -66,6 +68,11 @@ int main(int argc, char *argv[]) {
     return -1;
   }
   shmmsg_wepd->busy = 1;
+  shmmsg_wepd->request = 0;
+  shmmsg_wepd->num_line = 0;
+  shmmsg_wepd->msg[0] = '\0';
+  shmmsg_wepd->cmd[0] = '\0';
+
 
   //****************************************
 
@@ -80,6 +87,36 @@ int main(int argc, char *argv[]) {
   Paint_NewImage(BlackImage, EPD_4IN2_WIDTH, EPD_4IN2_HEIGHT, 0, WHITE);
 
   int exit = 0;
+
+  fp = fopen("./display.log", "a");
+  fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
+  fprintf(fp, "Request: %d\n", shmmsg_wepd->request);
+  fprintf(fp, "Line: %d\n", shmmsg_wepd->num_line);
+  fprintf(fp, "CMD: %s\n", shmmsg_wepd->cmd);
+  fprintf(fp, "MSG: %s\n", shmmsg_wepd->msg);
+  fprintf(fp, "\n");
+  fclose(fp);
+
+  printf("Initializing...\n");
+  if(DEV_Module_Init()!=0){
+    return -1;
+  }
+  EPD_4IN2_Init_Fast();
+  Paint_SelectImage(BlackImage);
+  Paint_Clear(WHITE);
+  Paint_DrawString_EN(10,   0, "Initializing...", &Font24, WHITE, BLACK);
+  Paint_DrawString_EN(10,  20, "Please wait...", &Font24, WHITE, BLACK);
+  EPD_4IN2_Display(BlackImage);
+  EPD_4IN2_Sleep();
+
+  fp = fopen("./display.log", "a");
+  fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
+  fprintf(fp, "Request: %d\n", shmmsg_wepd->request);
+  fprintf(fp, "Line: %d\n", shmmsg_wepd->num_line);
+  fprintf(fp, "CMD: %s\n", shmmsg_wepd->cmd);
+  fprintf(fp, "MSG: %s\n", shmmsg_wepd->msg);
+  fprintf(fp, "\n");
+  fclose(fp);
 
   // printf("Initializing...\n");
   // if(DEV_Module_Init()!=0){
@@ -109,7 +146,6 @@ int main(int argc, char *argv[]) {
     // Only process if request is activated or user input is not empty
     if (shmmsg_wepd->request == 1 || strcmp(user_input, "") != 0) {
   
-      FILE *fp;
       fp = fopen("./display.log", "a");
       fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
       fprintf(fp, "Request: %d\n", shmmsg_wepd->request);

@@ -49,7 +49,8 @@ MFLAGS := $(IFLAGS) -MMD -MP
 # Build
 $(BDIR)/$(IAEXE): $(OBJ)
 	$(CC) $(CVER) $(CFLAGS) $(OBJ) -o $@
-	echo -e "\n\033[38;2;255;20;147m>_ Use \033[96mmake run\033[38;2;255;20;147m to execute, use \033[96mmake debug\033[38;2;255;20;147m to enable debug logs\n"
+	echo -e "\n\033[38;2;255;20;147m>_ Use \033[96mmake run\033[38;2;255;20;147m to execute, use \033[96mmake debug\033[38;2;255;20;147m to enable debug logs\033[0m\n"
+	echo -e "\n\033[93m>_ Note to Caden, run \033[96mmake build\033[93m to compile your code\n"
 
 # Get rid of annoying messages
 -include $(DEP)

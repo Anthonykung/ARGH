@@ -580,11 +580,12 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                         // snprintf(filename, 200, "/data/Imperx/GigE-Frame-%lu.raw", timestampStr);
                         snprintf(filename, 200, "/data/Imperx/GigE-Frame-%" PRIu64 ".raw", frameId - 1);
                         g_result = filename;
-                        FILE *fp;
-                        fp = fopen("./GigE-log.txt", "a");
-                        fprintf(fp, "Frame ID: %d\n", frameId);
-                        fprintf(fp, "\n");
-                        fclose(fp);
+                        FILE *logfp;
+                        logfp = fopen("./GigE-log.log", "a");
+                        fprintf(logfp, "Frame ID: %d\n", frameId);
+                        fprintf(logfp, "Droped: %d\n", droped);
+                        fprintf(logfp, "\n");
+                        fclose(logfp);
 
                         // std::cout << "OK FID:"  << std::uppercase << std::hex << std::setfill('0') << std::setw(16) << frameId << " "
                         //     << std::dec << std::setfill(' ') << std::setw(4) << buffer->GetWidth()<< "W "

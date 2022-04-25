@@ -103,7 +103,7 @@ struct shm_wepd *shmmsg_wepd;
 struct shm_gige *shmmsg_gige;
 struct shm_gpio *shmmsg_gpio;
 int wepd_pid;
-int gige_pid;
+int gige_pid = 0;
 int gpio_pid;
 int terminate;
 
