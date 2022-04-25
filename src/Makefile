@@ -31,7 +31,7 @@ SDIR := .
 BDIR := ./build
 
 # Define Compiler Flags
-CFLAGS := -fdiagnostics-color=always -Wall -pthread -g
+CFLAGS := -fdiagnostics-color=always -Wall -pthread -g -lstdc++fs
 
 # Creat Subdirectories
 SUBDIR := $(shell find $(SDIR) -type d -not -path '$(BDIR)/*' -not -path '.git/*' -not -path $(IGN) -exec mkdir -p -- $(BDIR)/{} \;)

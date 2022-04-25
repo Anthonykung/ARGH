@@ -1,3 +1,21 @@
+/**
+ * @file sysfs_gpio.h
+ * @author Anthony Kung (hi@anth.dev)
+ * @name e-Paper Display SYSFS GPIO Config
+ * @brief This file controls the GPIO pins of the e-Paper Display
+ * @version 0.0.1
+ * @date 2022-04-18
+ * 
+ * Modified From Waveshare e-Paper Display Examples
+ * - Fixed SYSFS number for GPIO pin on Jetson AGX Xavier
+ * 
+ * @copyright Copyright (c) 2022 Anthony Kung <hi@anth.dev>
+ * @license Apache-2.0
+ * 
+ */
+
+
+
 /*****************************************************************************
 * | File        :   sysfs_gpio.h
 * | Author      :   Waveshare team

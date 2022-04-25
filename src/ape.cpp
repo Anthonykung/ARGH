@@ -13,9 +13,12 @@
 
 // Include Internal Libraries
 #include "ape.hpp"
+// #include "../BosonUSB/buttonstates.hpp"
 
 int main(int argc, char *argv[]) {
   cout << "APE Started!" << endl;
+  
+  signal(SIGINT, InterruptHandler);
 
   //****************************************
 
@@ -37,16 +40,38 @@ int main(int argc, char *argv[]) {
 
   //****************************************
 
+  //****************************************
+
+    // Interprocess Communication
+
+    // ANTH = 2684
+    int shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct gige_stats), IPC_CREAT | 0644);
+    if (shmid_gige < 0) {
+        std::cout << "IPC Init Failed\n" << std::endl;
+        return shmid_gige;
+    }
+    shmmsg_gige = (struct gige_stats *) shmat(shmid_gige, NULL, 0);
+    if (shmmsg_gige == (void *) -1) {
+        std::cout << "IPC Init Failed\n" << std::endl;
+        return -1;
+    }
+
+    shmmsg_gige->busy = 1;
+
+  //****************************************
+
 
   int sharedStatus = 0;
   //thread thermal(temp_regulator, ref(sharedStatus));
   //thread gpio(gpio_controller, ref(sharedStatus));
   thread display_app(display_exe, ref(sharedStatus));
   thread display(display_controller, ref(sharedStatus));
+  // thread button(button_main);
+  // thread display_manager(display_state);
   //thread gige(gige_controller, ref(sharedStatus));
   //thread usbc(usbc_controller, ref(sharedStatus));
 
-  interactive();
+
   unique_lock<mutex> lck(mtx);
   while (sharedStatus < 2) {
     cv.wait(lck);
@@ -65,6 +90,10 @@ int gige_controller(int &sharedStatus) {
   unique_lock<mutex> lck(mtx);
   sharedStatus += 1;
   cv.notify_one();
+
+  shmmsg_gige->start = 1;
+  shmmsg_gige->num_devices = 0;
+  shmmsg_gige->path[0] = '\0';
   return 0;
 }
 
@@ -238,10 +267,18 @@ int interactive() {
   
 }
 
-void  Handler(int signo) {
+void  InterruptHandler(int signo) {
     //System Exit
     printf("\r\nHandler:exit\r\n");
-    DEV_Module_Exit();
+
+    // If Display is busy, wait for it to be free
+    while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
+      // Waiting For Display to be free
+    }
+    // Set command
+    strcpy(shmmsg_wepd->cmd, "exit");
+    // Let Display Controller know that a message is ready to be read
+    shmmsg_wepd->request = 1;
 
     exit(0);
 }
@@ -250,6 +287,8 @@ int display_controller(int &sharedStatus) {
   unique_lock<mutex> lck(mtx);
   sharedStatus += 1;
   cv.notify_one();
+
+  // *************************************************************************
   printf("Initializing Display\n");
   // If Display is busy, wait for it to be free
   while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
@@ -262,6 +301,21 @@ int display_controller(int &sharedStatus) {
   // Let Display Controller know that a message is ready to be read
   shmmsg_wepd->request = 1;
 
+  // *************************************************************************
+
+  // *************************************************************************
+  // If Display is busy, wait for it to be free
+  while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
+    // Waiting For Display to be free
+  }
+  // Set command
+  strcpy(shmmsg_wepd->cmd, "exit");
+  // Let Display Controller know that a message is ready to be read
+  shmmsg_wepd->request = 1;
+  // *************************************************************************
+
+
+  // *************************************************************************
   // If Display is busy, wait for it to be free
   while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
     // Waiting For Display to be free
@@ -270,6 +324,7 @@ int display_controller(int &sharedStatus) {
   strcpy(shmmsg_wepd->cmd, "start write");
   // Let Display Controller know that a message is ready to be read
   shmmsg_wepd->request = 1;
+  // *************************************************************************
 
   int display_status = 0;
   int display_interval = 0;
@@ -310,7 +365,7 @@ int display_controller(int &sharedStatus) {
       }
       else if (display_timer == 50 && display_interval == 2) {
         display_write(12, "Refresh Imminent");
-        display_write(13, "This may take 20 seconds");
+        display_write(13, "This may take 20 sec");
       }
     }
   }
@@ -374,85 +429,85 @@ int display_state() {
 
   switch (stat_ln) {
     case 0:
-      display_write(1, "Waiting...");
+      display_write(0, "Waiting...");
       break;
     case 1:
-      display_write(1, "Recording...");
+      display_write(0, "Recording...");
       break;
     case 2:
-      display_write(1, "Stopped...");
+      display_write(0, "Stopped...");
       break;
     case 3:
-      display_write(1, "Configuring...");
+      display_write(0, "Configuring...");
+      break;
+    default:
+      display_write(0, "ERROR");
+      break;
+  }
+
+  switch (stop_ln) {
+    case 0:
+      display_write(1, "  Start/Stop Recording");
+      break;
+    case 1:
+      display_write(1, "> Start/Stop Recording");
       break;
     default:
       display_write(1, "ERROR");
       break;
   }
 
-  switch (stop_ln) {
+  switch (delay_ln) {
     case 0:
-      display_write(2, "  Start/Stop Recording");
+      display_write(2, "  Preset Delay" + to_string(delay_sec/3600) + ":" + to_string((delay_sec%3600)/60) + ":" + to_string(delay_sec%60));
       break;
     case 1:
-      display_write(2, "> Start/Stop Recording");
+      display_write(2, ">  Preset Delay" + to_string(delay_sec/3600) + ":" + to_string((delay_sec%3600)/60) + ":" + to_string(delay_sec%60));
+      break;
+    case 2:
+      display_write(2, ">  Preset Delay" + to_string(delay_config/3600) + ":" + to_string((delay_config%3600)/60) + ":" + to_string(delay_config%60));
       break;
     default:
       display_write(2, "ERROR");
       break;
   }
 
-  switch (delay_ln) {
+  switch (record_ln) {
     case 0:
-      display_write(3, "  Preset Delay" + to_string(delay_sec/3600) + ":" + to_string((delay_sec%3600)/60) + ":" + to_string(delay_sec%60));
+      display_write(3, "  Recording Time" + to_string(record_sec/3600) + ":" + to_string((record_sec%3600)/60) + ":" + to_string(record_sec%60));
       break;
     case 1:
-      display_write(3, ">  Preset Delay" + to_string(delay_sec/3600) + ":" + to_string((delay_sec%3600)/60) + ":" + to_string(delay_sec%60));
+      display_write(3, "> Recording Time" + to_string(record_sec/3600) + ":" + to_string((record_sec%3600)/60) + ":" + to_string(record_sec%60));
       break;
     case 2:
-      display_write(3, ">  Preset Delay" + to_string(delay_config/3600) + ":" + to_string((delay_config%3600)/60) + ":" + to_string(delay_config%60));
+      display_write(3, "> Recording Time" + to_string(record_config/3600) + ":" + to_string((record_config%3600)/60) + ":" + to_string(record_config%60));
       break;
     default:
       display_write(3, "ERROR");
       break;
   }
 
-  switch (record_ln) {
+  switch (prev_ln) {
     case 0:
-      display_write(4, "  Recording Time" + to_string(record_sec/3600) + ":" + to_string((record_sec%3600)/60) + ":" + to_string(record_sec%60));
+      display_write(4, "  Previous Settings");
       break;
     case 1:
-      display_write(4, "> Recording Time" + to_string(record_sec/3600) + ":" + to_string((record_sec%3600)/60) + ":" + to_string(record_sec%60));
-      break;
-    case 2:
-      display_write(4, "> Recording Time" + to_string(record_config/3600) + ":" + to_string((record_config%3600)/60) + ":" + to_string(record_config%60));
+      display_write(4, "> Previous Settings");
       break;
     default:
       display_write(4, "ERROR");
       break;
   }
 
-  switch (prev_ln) {
+  switch (info_ln) {
     case 0:
-      display_write(5, "  Previous Settings");
+      display_write(5, "");
       break;
     case 1:
-      display_write(5, "> Previous Settings");
+      display_write(5, "> " + info_str);
       break;
     default:
       display_write(5, "ERROR");
-      break;
-  }
-
-  switch (info_ln) {
-    case 0:
-      display_write(6, "");
-      break;
-    case 1:
-      display_write(6, "> " + info_str);
-      break;
-    default:
-      display_write(6, "ERROR");
       break;
   }
 

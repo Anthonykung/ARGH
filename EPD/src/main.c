@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
     if (shmmsg_wepd->request == 1 || strcmp(user_input, "") != 0) {
   
       FILE *fp;
-      fp = fopen("./test.txt", "a");
+      fp = fopen("./display-log.txt", "a");
       fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
       fprintf(fp, "Request: %d\n", shmmsg_wepd->request);
       fprintf(fp, "Line: %d\n", shmmsg_wepd->num_line);

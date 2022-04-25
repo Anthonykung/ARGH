@@ -20,6 +20,10 @@
 #define DEVICES 5
 
 struct gige_stats {
+    int busy;
+    int request;
+    int start;
+    int exit;
     int num_devices;
     char identifier[DEVICES][STR_SIZE];
     char path[STR_SIZE];
@@ -46,96 +50,103 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    shmmsg_gige->ready = 1;
+    shmmsg_gige->busy = 0;
+    shmmsg_gige->exit = 0;
+    shmmsg_gige->start = 0;
+
   //****************************************
     
-    // Get System
-	auto system = IpxCam::IpxCam_GetSystem();
-    if (system) {
-        while (true) {
-            // Select desired interface
-            auto iface = SelectInterface(system);
-            if (iface) {
-                // Show Number of Connected Devices
-                auto numDevices = GetConnectedDevices(iface);
+    while (shmmsg_gige->exit == 0) {
+        // Get System
+        auto system = IpxCam::IpxCam_GetSystem();
+        if (system) {
+            while (shmmsg_gige->start) {
+                // Select desired interface
+                auto iface = SelectInterface(system);
+                if (iface) {
+                    // Show Number of Connected Devices
+                    auto numDevices = GetConnectedDevices(iface);
 
-                for (int i = 0; i < numDevices; i++) {
-                    // Select desired device
-                    auto deviceInfo = SelectDevice(iface, i);
-                    if (deviceInfo) {
-                        auto deviceName = deviceInfo->GetDisplayName();
-                        std::cout << "\nConnecting to " << deviceName << " ....\n";
+                    for (int i = 0; i < numDevices; i++) {
+                        // Select desired device
+                        auto deviceInfo = SelectDevice(iface, i);
+                        if (deviceInfo) {
+                            auto deviceName = deviceInfo->GetDisplayName();
+                            std::cout << "\nConnecting to " << deviceName << " ....\n";
 
-                        // check if Ip Address can be adjusted
-                        if (deviceInfo->GetAccessStatus() == IpxCam::DeviceInfo::IpSubnetMismatch) {
-                            std::cout << "Cannot connect due to Ip Subnet Mismatch error\n";
-                            SetIpAddress(deviceInfo);
-                        }
+                            // check if Ip Address can be adjusted
+                            if (deviceInfo->GetAccessStatus() == IpxCam::DeviceInfo::IpSubnetMismatch) {
+                                std::cout << "Cannot connect due to Ip Subnet Mismatch error\n";
+                                SetIpAddress(deviceInfo);
+                            }
 
-                        if (deviceInfo->GetAccessStatus() == IpxCam::DeviceInfo::AccessStatusReadWrite) {
-                            auto device = IpxCam_CreateDevice(deviceInfo);
-                            if (device) {
-                                std::cout << "Connecting to " << deviceName << " DONE\n\n";
-                                std::cout << std::endl;
+                            if (deviceInfo->GetAccessStatus() == IpxCam::DeviceInfo::AccessStatusReadWrite) {
+                                auto device = IpxCam_CreateDevice(deviceInfo);
+                                if (device) {
+                                    std::cout << "Connecting to " << deviceName << " DONE\n\n";
+                                    std::cout << std::endl;
 
-                                IpxCam::Stream *stream = nullptr;
-                                if (device->GetNumStreams() >= 1 && (stream = device->GetStreamByIndex(0))) {
-                                    std::vector<IpxCam::Buffer*> bufferList;
-                                    auto bufSize = stream->GetBufferSize();
-                                    auto minNumBuffers = stream->GetMinNumBuffers();
-                                    for (size_t i = 0; i < minNumBuffers; ++i)
-                                        bufferList.push_back(stream->CreateBuffer(bufSize, nullptr, nullptr));
+                                    IpxCam::Stream *stream = nullptr;
+                                    if (device->GetNumStreams() >= 1 && (stream = device->GetStreamByIndex(0))) {
+                                        std::vector<IpxCam::Buffer*> bufferList;
+                                        auto bufSize = stream->GetBufferSize();
+                                        auto minNumBuffers = stream->GetMinNumBuffers();
+                                        for (size_t i = 0; i < minNumBuffers; ++i)
+                                            bufferList.push_back(stream->CreateBuffer(bufSize, nullptr, nullptr));
 
-                                    // set and start separate acquisition thread
-                                    g_isStop = false;
-                                    std::thread thread(AcquireImages, device, stream);
-                                    std::cin.get();
-                                    g_isStop = true;
+                                        // set and start separate acquisition thread
+                                        g_isStop = false;
+                                        std::thread thread(AcquireImages, device, stream);
+                                        std::cin.get();
+                                        g_isStop = true;
 
-                                    // cancel I/O for current buffer just in case acquisition thread is waiting it
-                                    stream->CancelBuffer();
+                                        // cancel I/O for current buffer just in case acquisition thread is waiting it
+                                        stream->CancelBuffer();
 
-                                    thread.join();
-                                    if (!g_result.compare(""))
-                                        std::cout << "ERROR: AcquireImages failed" << std::endl;
+                                        thread.join();
+                                        if (!g_result.compare(""))
+                                            std::cout << "ERROR: AcquireImages failed" << std::endl;
+                                        else
+                                            std::cout << "\tImage Location: " << g_result << std::endl;
+
+                                        stream->FlushBuffers(IpxCam::Flush_AllDiscard);
+                                        FreeDataStreamBuffers(stream, &bufferList);
+
+                                        // Close the stream
+                                        std::cout << "Closing stream    ...." << std::endl;
+                                        stream->Release();
+                                        std::cout << "Closing stream    DONE" << std::endl;
+
+                                        // Disconnect the device
+                                        std::cout << "Disconnecting device(" << deviceName << ")    ...." << std::endl;
+                                        device->Release();
+                                        std::cout << "Disconnecting device(" << deviceName << ")    DONE" << std::endl;
+                                    }
                                     else
-                                        std::cout << "\tImage Location: " << g_result << std::endl;
-
-                                    stream->FlushBuffers(IpxCam::Flush_AllDiscard);
-                                    FreeDataStreamBuffers(stream, &bufferList);
-
-                                    // Close the stream
-                                    std::cout << "Closing stream    ...." << std::endl;
-                                    stream->Release();
-                                    std::cout << "Closing stream    DONE" << std::endl;
-
-                                    // Disconnect the device
-                                    std::cout << "Disconnecting device(" << deviceName << ")    ...." << std::endl;
-                                    device->Release();
-                                    std::cout << "Disconnecting device(" << deviceName << ")    DONE" << std::endl;
+                                        std::cout << "Unable to create a stream on" << deviceName << std::endl;
                                 }
                                 else
-                                    std::cout << "Unable to create a stream on" << deviceName << std::endl;
+                                    std::cout << "Unable to connect to" << deviceName << std::endl;
                             }
                             else
-                                std::cout << "Unable to connect to" << deviceName << std::endl;
-                        }
-                        else
-                        {
-                            std::cout << "Cannot connect due to AccessStatus(" << GetAccessStatusStr(deviceInfo->GetAccessStatus()) << ")";
-                            std::cout << "\nConnecting to " << deviceName << " FAIL\n";
+                            {
+                                std::cout << "Cannot connect due to AccessStatus(" << GetAccessStatusStr(deviceInfo->GetAccessStatus()) << ")";
+                                std::cout << "\nConnecting to " << deviceName << " FAIL\n";
+                            }
                         }
                     }
                 }
+                else
+                    break;
             }
-            else
-                break;
-        }
 
-        std::cout << "Releasing system" << std::endl;
-        system->Release();
+            std::cout << "Releasing system" << std::endl;
+            system->Release();
+        }
+        else
+            std::cout << "Unable to create system!" << std::endl;
     }
-    else
-        std::cout << "Unable to create system!" << std::endl;
 
     return 0;
 }

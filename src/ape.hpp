@@ -42,6 +42,7 @@
 #define SHM_KEY_WEPD 0x9373
 #define SHM_KEY_GIGE 0x4443
 #define STR_SIZE 1000
+#define DEVICES 5
 
 // Define Namespaces
 using std::cout;
@@ -68,10 +69,21 @@ struct shm_wepd {
   char msg[STR_SIZE];
 };
 
+struct gige_stats {
+    int busy;
+    int request;
+    int start;
+    int exit;
+    int num_devices;
+    char identifier[DEVICES][STR_SIZE];
+    char path[STR_SIZE];
+};
+
 // Declare Global Variables
 std::mutex mtx;
 std::condition_variable cv;
 struct shm_wepd *shmmsg_wepd;
+struct gige_stats *shmmsg_gige;
 int wepd_pid;
 
 // Declare Functions
@@ -93,5 +105,6 @@ int display_exe(int &sharedStatus);
 int display_write(int line, string message);
 int display_state();
 int interactive();
+void  InterruptHandler(int signo);
 
 #endif // APE_HPP
