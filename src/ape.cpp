@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
   //****************************************
 
-  // Interprocess Communication
+  // Interprocess Communication Waveshare e-Paper Display
 
   // ANTH = 2684
   int shmid_wepd = shmget(SHM_KEY_WEPD, sizeof(struct shm_wepd), IPC_CREAT | 0644);
@@ -42,22 +42,40 @@ int main(int argc, char *argv[]) {
 
   //****************************************
 
-    // Interprocess Communication
+  // Interprocess Communication
 
-    // ANTH = 2684
-    int shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct gige_stats), IPC_CREAT | 0644);
-    if (shmid_gige < 0) {
-        std::cout << "IPC Init Failed\n" << std::endl;
-        return shmid_gige;
-    }
-    shmmsg_gige = (struct gige_stats *) shmat(shmid_gige, NULL, 0);
-    if (shmmsg_gige == (void *) -1) {
-        std::cout << "IPC Init Failed\n" << std::endl;
-        return -1;
-    }
+  // ANTH = 2684
+  int shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct shm_gige), IPC_CREAT | 0644);
+  if (shmid_gige < 0) {
+      std::cout << "IPC Init Failed\n" << std::endl;
+      return shmid_gige;
+  }
+  shmmsg_gige = (struct shm_gige *) shmat(shmid_gige, NULL, 0);
+  if (shmmsg_gige == (void *) -1) {
+      std::cout << "IPC Init Failed\n" << std::endl;
+      return -1;
+  }
 
-    shmmsg_gige->busy = 1;
+  shmmsg_gige->busy = 1;
 
+  //****************************************
+
+  //****************************************
+
+  // Interprocess Communication
+
+  // ANTH = 2684
+  int shmid_gpio = shmget(SHM_KEY_GPIO, sizeof(struct shm_gpio), IPC_CREAT | 0644);
+  if (shmid_gpio < 0) {
+      std::cout << "IPC Init Failed\n" << std::endl;
+      return shmid_gpio;
+  }
+  shmmsg_gpio = (struct shm_gpio *) shmat(shmid_gpio, NULL, 0);
+  if (shmmsg_gpio == (void *) -1) {
+      std::cout << "IPC Init Failed\n" << std::endl;
+      return -1;
+  }
+  
   //****************************************
 
 

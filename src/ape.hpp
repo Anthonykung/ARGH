@@ -41,6 +41,7 @@
 #define GPU_TEMP "/sys/class/thermal/thermal_zone1/temp"
 #define SHM_KEY_WEPD 0x9373
 #define SHM_KEY_GIGE 0x4443
+#define SHM_KEY_GPIO 0x4746
 #define STR_SIZE 1000
 #define DEVICES 5
 
@@ -69,7 +70,7 @@ struct shm_wepd {
   char msg[STR_SIZE];
 };
 
-struct gige_stats {
+struct shm_gige {
     int busy;
     int request;
     int start;
@@ -79,11 +80,30 @@ struct gige_stats {
     char path[STR_SIZE];
 };
 
+struct shm_gpio {
+    int stat_ln;
+    int stop_ln;
+    int delay_ln;
+    int record_ln;
+    int prev_ln;
+    int info_ln;
+    int previous_stat;
+    int delay_config;
+    int record_config;
+    int needsrestart;
+    int delay_sec;
+    int record_sec;
+    pid_t bosonstorepid;
+    pid_t bosoncampid;
+    int recordingwasstarted;
+};
+
 // Declare Global Variables
 std::mutex mtx;
 std::condition_variable cv;
 struct shm_wepd *shmmsg_wepd;
-struct gige_stats *shmmsg_gige;
+struct shm_gige *shmmsg_gige;
+struct shm_gpio *shmmsg_gpio;
 int wepd_pid;
 
 // Declare Functions

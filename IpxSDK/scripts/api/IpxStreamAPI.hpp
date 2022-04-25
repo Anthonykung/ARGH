@@ -47,4 +47,20 @@ int GetConnectedDevices(IpxCam::Interface *iface);
 std::atomic_bool g_isStop(false);
 std::string g_result = "";
 
+#define SHM_KEY_GIGE 0x4443
+#define STR_SIZE 1000
+#define DEVICES 5
+
+struct shm_gige {
+    int busy;
+    int request;
+    int start;
+    int exit;
+    int num_devices;
+    char identifier[DEVICES][STR_SIZE];
+    char path[STR_SIZE];
+};
+
+struct shm_gige *shmmsg_gige;
+
 #endif // IPX_API_HPP
