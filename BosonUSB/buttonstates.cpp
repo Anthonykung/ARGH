@@ -62,6 +62,7 @@ void callbosonstore(time_t currtime)
   stringstream ss;
   ss << currtime;
   string timestring = ss.str();
+  ss.str("");
   strcpy(bosstr[1],timestring.c_str());
   print("WHAT IS IT bos: %s",bosstr[1]);
   //snprintf(bosstr[1],15,"%i",currtime);
@@ -80,6 +81,7 @@ void callimpstore(time_t currtime)
   stringstream ss;
   ss << currtime;
   string timestring = ss.str();
+  ss.str("");
   strcpy(impstr[1],timestring.c_str());
   print("WHAT IS IT imp: %s",impstr[1]);
   impstr[2] = NULL;
@@ -694,6 +696,7 @@ int main()
       stringstream flints;
       flints << flint;
       flints >> updatedflight;
+      flints.str("");
 
       ofstream newflight;
       newflight.open("../BosonUSB/flightnumber.txt", ios::out | ios::trunc);
