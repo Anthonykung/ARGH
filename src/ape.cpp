@@ -158,7 +158,7 @@ int gige_controller(int &sharedStatus) {
       gige_pid = fork();
       if (gige_pid == 0) {
         FILE *fp;
-        fp = fopen("./GigE-log.txt", "a");
+        fp = fopen("./APE-log.txt", "a");
         fprintf(fp, "Frame ID: %d\n", frameId);
         fprintf(fp, "\n");
         fclose(fp);
