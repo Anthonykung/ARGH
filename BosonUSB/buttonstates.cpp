@@ -186,12 +186,12 @@ void selectpressed()
     shmmsg_gpio->delay_sec = shmmsg_gpio->delay_config; // set file var to config var
 
     ofstream rewritedelay;
-    rewritedelay.open("timeddelay.txt", ios::out | ios::trunc);
+    rewritedelay.open("../BosonUSB/timeddelay.txt", ios::out | ios::trunc);
     rewritedelay << shmmsg_gpio->delay_sec << endl;
     rewritedelay.close();
 
     ofstream rewriteprevdelay;
-    rewriteprevdelay.open("previousdelay.txt", ios::out | ios::trunc);
+    rewriteprevdelay.open("../BosonUSB/previousdelay.txt", ios::out | ios::trunc);
     rewriteprevdelay << shmmsg_gpio->delay_sec << endl;
     rewriteprevdelay.close();
     if (previous_stat == 2)
@@ -211,12 +211,12 @@ void selectpressed()
     shmmsg_gpio->info_ln = 0;
     shmmsg_gpio->record_sec = shmmsg_gpio->record_config; // set file var to config var
     ofstream rewriterecord;
-    rewriterecord.open("recordingtime.txt", ios::out | ios::trunc);
+    rewriterecord.open("../BosonUSB/recordingtime.txt", ios::out | ios::trunc);
     rewriterecord << shmmsg_gpio->record_sec << endl;
     rewriterecord.close();
 
     ofstream rewriteprevrecord;
-    rewriteprevrecord.open("previousrecord.txt", ios::out | ios::trunc);
+    rewriteprevrecord.open("../BosonUSB/previousrecord.txt", ios::out | ios::trunc);
     rewriteprevrecord << shmmsg_gpio->record_sec << endl;
     rewriteprevrecord.close();
     if (previous_stat == 2)
@@ -250,7 +250,7 @@ void selectpressed()
 
     fstream prevdelayfile;
     string delaytime;
-    prevdelayfile.open("previousdelay.txt", ios::in);
+    prevdelayfile.open("../BosonUSB/previousdelay.txt", ios::in);
     if (prevdelayfile.is_open())
     {
       getline(prevdelayfile, delaytime);
@@ -261,7 +261,7 @@ void selectpressed()
 
     fstream prevrecfile;
     string recordtime;
-    prevrecfile.open("previousrecord.txt", ios::in);
+    prevrecfile.open("../BosonUSB/previousrecord.txt", ios::in);
     if (prevrecfile.is_open())
     {
       getline(prevrecfile, recordtime);
@@ -271,12 +271,12 @@ void selectpressed()
     shmmsg_gpio->record_sec = stoi(recordtime);
 
     ofstream rewritedelay;
-    rewritedelay.open("timeddelay.txt", ios::out | ios::trunc);
+    rewritedelay.open("../BosonUSB/timeddelay.txt", ios::out | ios::trunc);
     rewritedelay << shmmsg_gpio->delay_sec << endl;
     rewritedelay.close();
 
     ofstream rewriterecord;
-    rewriterecord.open("recordingtime.txt", ios::out | ios::trunc);
+    rewriterecord.open("../BosonUSB/recordingtime.txt", ios::out | ios::trunc);
     rewriterecord << shmmsg_gpio->record_sec << endl;
     rewriterecord.close();
 
@@ -549,7 +549,7 @@ int main()
 
     fstream recordfile;
     string recordstring;
-    recordfile.open("recordingtime.txt", ios::in);
+    recordfile.open("../BosonUSB/recordingtime.txt", ios::in);
     if (recordfile.is_open())
     {
       getline(recordfile, recordstring);
@@ -565,7 +565,7 @@ int main()
     string delaytime;
 
     fstream delayfile;
-    delayfile.open("timeddelay.txt", ios::in);
+    delayfile.open("../BosonUSB/timeddelay.txt", ios::in);
     if (delayfile.is_open())
     {
       getline(delayfile, delaytime);
@@ -653,7 +653,7 @@ int main()
       if (needsrestart == 0)
       {
         shmmsg_gpio->delay_sec = shmmsg_gpio->delay_sec - 1;
-        rewritedelay.open("timeddelay.txt", ios::out | ios::trunc);
+        rewritedelay.open("../BosonUSB/timeddelay.txt", ios::out | ios::trunc);
         rewritedelay << shmmsg_gpio->delay_sec << endl;
         rewritedelay.close();
         //  printf("delay time remaining: %i \n",delay_sec);
@@ -669,7 +669,7 @@ int main()
       string flightstring;
 
       fstream flightfile;
-      flightfile.open("flightnumber.txt", ios::in);
+      flightfile.open("../BosonUSB/flightnumber.txt", ios::in);
       if (flightfile.is_open())
       {
         getline(flightfile, flightstring);
@@ -691,7 +691,7 @@ int main()
       flints >> updatedflight;
 
       ofstream newflight;
-      newflight.open("flightnumber.txt", ios::out | ios::trunc);
+      newflight.open("../BosonUSB/flightnumber.txt", ios::out | ios::trunc);
       newflight << updatedflight << endl;
       newflight.close();
 
@@ -768,7 +768,7 @@ int main()
       if (needsrestart == 0)
       {
         shmmsg_gpio->record_sec = shmmsg_gpio->record_sec - 1;
-        rewriterecord.open("recordingtime.txt", ios::out | ios::trunc);
+        rewriterecord.open("../BosonUSB/recordingtime.txt", ios::out | ios::trunc);
         rewriterecord << shmmsg_gpio->record_sec << endl;
         rewriterecord.close();
         //  printf("recording time remaining: %i \n",record_sec);

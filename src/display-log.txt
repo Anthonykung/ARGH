@@ -454,3 +454,177 @@ Line: 5
 CMD: write
 MSG: 
 
+Busy: 0
+Request: 1
+Line: 0
+CMD: exit
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: init
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: start write
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 1
+CMD: write
+MSG: Init Complete
+
+Busy: 0
+Request: 1
+Line: 1
+CMD: write
+MSG: > Start/Stop Recording
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: 
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 3
+CMD: write
+MSG:   Recording Time0:0:0
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: 
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 5
+CMD: write
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: exit
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: init
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: init
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: start write
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 1
+CMD: write
+MSG: Init Complete
+
+Busy: 0
+Request: 1
+Line: 1
+CMD: write
+MSG: > Start/Stop Recording
+
+Busy: 0
+Request: 1
+Line: 2
+CMD: write
+MSG:   Preset Delay0:0:0
+
+Busy: 0
+Request: 1
+Line: 3
+CMD: write
+MSG:   Recording Time0:0:0
+
+Busy: 0
+Request: 1
+Line: 4
+CMD: write
+MSG:   Previous Settings
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: 
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: exit
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: init
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: start write
+MSG: Waiting...
+
+Busy: 0
+Request: 1
+Line: 1
+CMD: write
+MSG: Init Complete
+
+Busy: 0
+Request: 1
+Line: 1
+CMD: write
+MSG: > Start/Stop Recording
+
+Busy: 0
+Request: 1
+Line: 2
+CMD: write
+MSG:   Preset Delay0:0:0
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: 
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 4
+CMD: write
+MSG:   Previous Settings
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: 
+MSG: 
+
+Busy: 0
+Request: 1
+Line: 0
+CMD: exit
+MSG: 
+
