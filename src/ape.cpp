@@ -142,6 +142,7 @@ int gpio_controller(int &sharedStatus) {
   cv.notify_one();
   gpio_pid = fork();
   if (gpio_pid == 0) {
+    cout << "GPIO Controller Started!" << endl;
     execl("../BosonUSB/exstates", "../BosonUSB/exstates", NULL);
   }
   return 0;
@@ -454,20 +455,20 @@ int display_write(int line, string message) {
 int display_state() {
 
   // Control Variables
-  int stat_ln;
-  int stop_ln;
-  int delay_ln;
-  int record_ln;
-  int prev_ln;
-  int info_ln;
+  // int stat_ln;
+  // int stop_ln;
+  // int delay_ln;
+  // int record_ln;
+  // int prev_ln;
+  // int info_ln;
 
-  int delay_sec;
-  int delay_config;
-  int record_sec;
-  int record_config;
+  // int delay_sec;
+  // int delay_config;
+  // int record_sec;
+  // int record_config;
   string info_str;
 
-  switch (stat_ln) {
+  switch (shmmsg_gpio->stat_ln) {
     case 0:
       display_write(0, "Waiting...");
       break;
@@ -488,7 +489,7 @@ int display_state() {
       break;
   }
 
-  switch (stop_ln) {
+  switch (shmmsg_gpio->stop_ln) {
     case 0:
       display_write(1, "  Start/Stop Recording");
       break;
@@ -500,37 +501,37 @@ int display_state() {
       break;
   }
 
-  switch (delay_ln) {
+  switch (shmmsg_gpio->delay_ln) {
     case 0:
-      display_write(2, "  Preset Delay" + to_string(delay_sec/3600) + ":" + to_string((delay_sec%3600)/60) + ":" + to_string(delay_sec%60));
+      display_write(2, "  Preset Delay" + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
       break;
     case 1:
-      display_write(2, ">  Preset Delay" + to_string(delay_sec/3600) + ":" + to_string((delay_sec%3600)/60) + ":" + to_string(delay_sec%60));
+      display_write(2, ">  Preset Delay" + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
       break;
     case 2:
-      display_write(2, ">  Preset Delay" + to_string(delay_config/3600) + ":" + to_string((delay_config%3600)/60) + ":" + to_string(delay_config%60));
+      display_write(2, ">  Preset Delay" + to_string(shmmsg_gpio->delay_config/3600) + ":" + to_string((shmmsg_gpio->delay_config%3600)/60) + ":" + to_string(shmmsg_gpio->delay_config%60));
       break;
     default:
       display_write(2, "ERROR");
       break;
   }
 
-  switch (record_ln) {
+  switch (shmmsg_gpio->record_ln) {
     case 0:
-      display_write(3, "  Recording Time" + to_string(record_sec/3600) + ":" + to_string((record_sec%3600)/60) + ":" + to_string(record_sec%60));
+      display_write(3, "  Recording Time" + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
       break;
     case 1:
-      display_write(3, "> Recording Time" + to_string(record_sec/3600) + ":" + to_string((record_sec%3600)/60) + ":" + to_string(record_sec%60));
+      display_write(3, "> Recording Time" + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
       break;
     case 2:
-      display_write(3, "> Recording Time" + to_string(record_config/3600) + ":" + to_string((record_config%3600)/60) + ":" + to_string(record_config%60));
+      display_write(3, "> Recording Time" + to_string(shmmsg_gpio->record_config/3600) + ":" + to_string((shmmsg_gpio->record_config%3600)/60) + ":" + to_string(shmmsg_gpio->record_config%60));
       break;
     default:
       display_write(3, "ERROR");
       break;
   }
 
-  switch (prev_ln) {
+  switch (shmmsg_gpio->prev_ln) {
     case 0:
       display_write(4, "  Previous Settings");
       break;
@@ -542,7 +543,7 @@ int display_state() {
       break;
   }
 
-  switch (info_ln) {
+  switch (shmmsg_gpio->info_ln) {
     case 0:
       display_write(5, "");
       break;

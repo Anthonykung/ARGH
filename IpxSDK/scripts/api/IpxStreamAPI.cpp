@@ -13,8 +13,6 @@
  * 
  */
 
-#include "IpxStreamAPI.h"
-
 #include <vector>
 #include <string>
 #include <atomic>
@@ -30,6 +28,8 @@
 #include <ctime>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+
+#include "IpxCameraApi.h"
 
 // Function Prototypes
 IpxCam::Interface *SelectInterface( IpxCam::System *system );
@@ -222,10 +222,10 @@ int GetConnectedDevices(IpxCam::Interface *iface)
         std::cout << "\tDevice Name: " << device->GetDisplayName() << "\tIdentified By: [" << (devices.size() - 1) << "]" << std::endl;
         char identity[STR_SIZE];
         snprintf(identity, STR_SIZE - 1, "%d", (devices.size() - 1));
-        strcpy(shm_gige->identifier[i], identity);
+        strcpy(shmmsg_gige->identifier[numDevices], identity);
         numDevices++;
     }
-    shm_gige->num_devices = numDevices;
+    shmmsg_gige->num_devices = numDevices;
     return numDevices;
 }
 
