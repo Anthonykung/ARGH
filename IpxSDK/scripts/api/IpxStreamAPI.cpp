@@ -581,7 +581,7 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                         snprintf(filename, 200, "/data/Imperx/GigE-Frame-%" PRIu64 ".raw", frameId - 1);
                         g_result = filename;
                         FILE *fp;
-                        fp = fopen("./APE-log.txt", "a");
+                        fp = fopen("./GigE-log.txt", "a");
                         fprintf(fp, "In KILL: %d\n", shmmsg_gpio->killsignal);
                         fprintf(fp, "\n");
                         fclose(fp);
