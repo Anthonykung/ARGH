@@ -159,7 +159,7 @@ int gige_controller(int &sharedStatus) {
       if (gige_pid == 0) {
         FILE *fp;
         fp = fopen("./APE-log.txt", "a");
-        fprintf(fp, "Frame ID: %d\n", frameId);
+        fprintf(fp, "GigE Started PID: %d\n", gige_pid);
         fprintf(fp, "\n");
         fclose(fp);
         shmmsg_gpio->startsignal = 0;
