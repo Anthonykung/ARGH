@@ -129,6 +129,7 @@ int gpio_get_state(int gpio)
   }
   gpio_state.close();
   //  cout << "GPIO State: " << state << endl;
+  printf("GETSTATE STOI \n");
   return stoi(state);
 }
 // Power loss during this any issues?
@@ -255,6 +256,7 @@ void selectpressed()
       getline(prevdelayfile, delaytime);
       prevdelayfile.close();
     }
+    printf("Delay1 STOI \n");
     shmmsg_gpio->delay_sec = stoi(delaytime);
 
     fstream prevrecfile;
@@ -265,6 +267,7 @@ void selectpressed()
       getline(prevrecfile, recordtime);
       prevrecfile.close();
     }
+    printf("Record1 STOI \n");
     shmmsg_gpio->record_sec = stoi(recordtime);
 
     ofstream rewritedelay;
@@ -496,15 +499,22 @@ int main()
   // Interprocess Communication
 
   // ANTH = 2684
-  struct shm_gpio *shmmsg_gpio;
-  int shmid_wepd = shmget(SHM_KEY_GPIO, sizeof(struct shm_gpio), IPC_CREAT | 0644);
-  if (shmid_wepd < 0) {
-    printf("GPIO IPC Init Failed\n");
-    return shmid_wepd;
+  int shmid_gpio = -1;
+  while (shmid_gpio < 0) {
+    shmid_gpio = shmget(SHM_KEY_GPIO, sizeof(struct shm_gpio), IPC_CREAT | 0644);
+    if (shmid_gpio < 0)
+    {
+      std::cout << "IPC Init Failed\n"
+                << std::endl;
+      return shmid_gpio;
+    }
   }
-  shmmsg_gpio = (struct shm_gpio *)shmat(shmid_wepd, NULL, 0);
-  if (shmmsg_gpio == (void *) -1) {
-    printf("GPIO IPC Init Failed\n");
+  
+  shmmsg_gpio = (struct shm_gpio *)shmat(shmid_gpio, NULL, 0);
+  if (shmmsg_gpio == (void *)-1)
+  {
+    std::cout << "IPC Attach Failed\n"
+              << std::endl;
     return -1;
   }
 
@@ -549,7 +559,7 @@ int main()
     {
       printf("Error opening record time file.");
     }
-
+    printf("record2 STOI \n");
     shmmsg_gpio->record_sec = stoi(recordstring);
 
     string delaytime;
@@ -561,6 +571,7 @@ int main()
       getline(delayfile, delaytime);
       delayfile.close();
     }
+    printf("delay 2 STOI \n");
     shmmsg_gpio->delay_sec = stoi(delaytime);
     ofstream rewritedelay;
 
@@ -671,7 +682,7 @@ int main()
 
       // flightstringc = flightstring.c_str();
       printf("%s \n", flightstring.c_str());
-
+      printf("FLINTSTOI\n");
       int flint = stoi(flightstring);
       flint = flint + 1;
       string updatedflight;
