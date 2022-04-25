@@ -84,12 +84,12 @@ int main(int argc, char *argv[]) {
 
   int sharedStatus = 0;
   //thread thermal(temp_regulator, ref(sharedStatus));
+  thread gige(gige_controller, ref(sharedStatus));
   thread gpio(gpio_controller, ref(sharedStatus));
   thread display_app(display_exe, ref(sharedStatus));
   thread display(display_controller, ref(sharedStatus));
   // thread button(button_main);
   thread display_manager(display_state);
-  thread gige(gige_controller, ref(sharedStatus));
   //thread usbc(usbc_controller, ref(sharedStatus));
 
 
@@ -119,18 +119,38 @@ int gige_controller(int &sharedStatus) {
   unique_lock<mutex> lck(mtx);
   sharedStatus += 1;
   cv.notify_one();
-  while (shmmsg_gige->request == 1) {
-    if (shmmsg_gpio->startsignal == 1 && shmmsg_gige->started == 0) {
-      cout << "GIGE Controller Started!" << endl;
+  cout << "\033[38;2;255;20;147mStarting GIGE Controller...\033[0m" << endl;
+  // shmmsg_gpio->startsignal = 1;
+  // shmmsg_gige->started = 0;
+  // shmmsg_gige->request = 1;
+  // shmmsg_gige->start = 1;
+  while (shmmsg_gpio->startsignal != 1) {
+    if (shmmsg_gpio->startsignal == 1) {
+      cout << "\033[38;2;255;20;147mGIGE Controller Started!\033[0m" << endl;
       gige_pid = fork();
       if (gige_pid == 0) {
-        execl("../IpxSDK/IpxGigE.sh", "../IpxSDK/IpxGigE.sh", NULL);
+        shmmsg_gpio->startsignal = 0;
+        execl("../IpxSDK/scripts/build/api/IpxStreamAPI", "../IpxSDK/scripts/build/api/IpxStreamAPI", NULL);
       }
     }
-    else if (gige_pid == 1 && shmmsg_gpio->killsignal == 1) {
-      cout << "GIGE Controller Killed!" << endl;
-      kill(gige_pid, SIGKILL);
-    }
+  }
+  // if (shmmsg_gpio->startsignal) {
+  //   cout << "\033[38;2;255;20;147mGIGE Controller Started!\033[0m" << endl;
+  //   gige_pid = fork();
+  //   if (gige_pid == 0) {
+  //     execl("../IpxSDK/scripts/build/api/IpxStreamAPI", "../IpxSDK/scripts/build/api/IpxStreamAPI", NULL);
+  //     shmmsg_gpio->startsignal = 0;
+  //   }
+  // }
+  // if (gige_pid != 0 && shmmsg_gpio->killsignal == 1) {
+  //   cout << "GIGE Controller Killed!" << endl;
+  //   kill(gige_pid, SIGKILL);
+  // }
+  while (shmmsg_gige->started != 1) {
+    
+  }
+  while (shmmsg_gige->started == 1) {
+    
   }
   
   return 0;

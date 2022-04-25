@@ -28,6 +28,7 @@
 #include <ctime>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <sys/stat.h>
 
 #include "IpxCameraApi.h"
 
@@ -72,31 +73,40 @@ int main(int argc, char *argv[]) {
     // Interprocess Communication
 
     // ANTH = 2684
-    int shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct shm_gige), IPC_CREAT | 0644);
-    if (shmid_gige < 0) {
-        std::cout << "IPC Init Failed\n" << std::endl;
-        return shmid_gige;
+    int shmid_gige = -1;
+    while (shmid_gige < 0) {
+        shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct shm_gige), IPC_CREAT | 0644);
+        if (shmid_gige < 0) {
+            std::cout << "IPC Init Failed\n" << std::endl;
+            return shmid_gige;
+        }
     }
+    
+    
     shmmsg_gige = (struct shm_gige *) shmat(shmid_gige, NULL, 0);
     if (shmmsg_gige == (void *) -1) {
-        std::cout << "IPC Init Failed\n" << std::endl;
+        std::cout << "IPC Attach Failed\n" << std::endl;
         return -1;
     }
 
     shmmsg_gige->busy = 0;
     shmmsg_gige->exit = 0;
     shmmsg_gige->start = 0;
+    shmmsg_gige->started == 0;
 
   //****************************************
     
-    while (shmmsg_gige->exit == 0) {
+    // while (shmmsg_gige->exit == 0) {
+        std::cout << "Waiting for start signal" << std::endl;
         // If request check request
-        if (shmmsg_gige->request) {
+        // if (shmmsg_gige->request) {
+            shmmsg_gige->request = 0;
             // Get System
             auto system = IpxCam::IpxCam_GetSystem();
             if (system) {
-                while (shmmsg_gige->start) {
+                while (true) {
                     shmmsg_gige->started = 1;
+                    std::cout << "Started!" << std::endl;
                     // Select desired interface
                     auto iface = SelectInterface(system);
                     if (iface) {
@@ -181,8 +191,8 @@ int main(int argc, char *argv[]) {
             }
             else
                 std::cout << "Unable to create system!" << std::endl;
-        }
-    }
+        // }
+    // }
 
     return 0;
 }
@@ -559,6 +569,12 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                         if (buffer->IsIncomplete())
                             ++incomplete;
 
+                        struct stat st = {0};
+
+                        if (stat("/data/Imperx", &st) == -1) {
+                            mkdir("/data/Imperx", 0755);
+                        }
+
                         char filename[200];
                         uint64_t timestampStr = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
                         // snprintf(filename, 200, "/data/Imperx/GigE-Frame-%lu.raw", timestampStr);
@@ -667,8 +683,8 @@ std::vector<std::string> split(const std::string& s, char delimiter)
 bool SetIpAddress( IpxCam::DeviceInfo* devInfo )
 {
     std::cout << "Would you like to set camera Ip Address [Ny]: ";
-    std::string str;
-    std::getline(std::cin, str, '\n');
+    std::string str = "y";
+    // std::getline(std::cin, str, '\n');
     if (!str.empty())
     {
         auto ans = str.c_str()[0];
@@ -696,8 +712,8 @@ bool SetIpAddress( IpxCam::DeviceInfo* devInfo )
 
             // ask and validate Ip Address
 			std::cout << "Enter Ip Address (Iface:" << description << ")[x.x.x.x]: ";
-            std::string str;
-            std::getline(std::cin, str, '\n');
+            std::string str = "169.254.1.1";
+            // std::getline(std::cin, str, '\n');
             auto ipAdr = ValidateIpAddress(str);
             if (!ipAdr)
                 return false;
