@@ -63,6 +63,7 @@ void callbosonstore(time_t currtime)
   ss << currtime;
   string timestring = ss.str();
   strcpy(bosstr[1],timestring.c_str());
+  print("WHAT IS IT bos: %s",bosstr[1]);
   //snprintf(bosstr[1],15,"%i",currtime);
   bosstr[2] = NULL;
   execvp(summontheboson, bosstr);
@@ -80,6 +81,7 @@ void callimpstore(time_t currtime)
   ss << currtime;
   string timestring = ss.str();
   strcpy(impstr[1],timestring.c_str());
+  print("WHAT IS IT imp: %s",impstr[1]);
   impstr[2] = NULL;
   execvp(summontheimp, impstr);
   printf("exiting impstore call\n");
