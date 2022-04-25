@@ -100,7 +100,7 @@ while(1){
  strcat(fullname,cstr);
  strcat(fullname,tiff);
 
-//printf("ABOUT TO LOOK FOR THIS: %s\n",fullname);
+printf("ABOUT TO LOOK FOR THIS: %s\n",fullname);
  while(stat(fullname,&currentfilestats) != 0){
 //printf("looping in here cause it works \n");
  }
