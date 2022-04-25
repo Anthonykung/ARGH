@@ -55,6 +55,7 @@ using namespace std::experimental::filesystem::v1;
 
 void callbosonstore(time_t currtime)
 {
+  printf("WE ARE IN THE CALL STORE BOSON\n");
   char summontheboson[] = "../BosonUSB/exrunusb";
   char *bosstr[3];
   bosstr[0] = "../BosonUSB/exrunusb";
@@ -71,6 +72,7 @@ void callbosonstore(time_t currtime)
 
 void callimpstore(time_t currtime)
 {
+  printf("WE ARE IN THE IMP STORE \n");
   char summontheimp[] = "../BosonUSB/eximpstore";
   char *impstr[3];
   impstr[0] = "../BosonUSB/eximpstore";
