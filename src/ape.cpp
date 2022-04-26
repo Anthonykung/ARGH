@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 
   terminate = 0;
   
-  // signal(SIGINT, InterruptHandler);
+  signal(SIGINT, InterruptHandler);
 
   //****************************************
 
