@@ -388,9 +388,9 @@ void  InterruptHandler(int signo) {
     // }
 
     
-    kill(wepd_pid, SIGKILL);
-    kill(gige_pid, SIGKILL);
-    kill(gpio_pid, SIGKILL);
+    kill(wepd_pid, SIGINT);
+    kill(gige_pid, SIGINT);
+    kill(gpio_pid, SIGINT);
 
     exit(0);
 }
