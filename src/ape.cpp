@@ -442,7 +442,7 @@ int display_controller(int &sharedStatus) {
     fprintf(ape_log, "\n");
     fclose(ape_log);
   }
-  ape_log = fopen("./APE-Loop.log", "a");
+  ape_log = fopen("./APE-log.log", "a");
   fprintf(ape_log, "Display Busy: %d\n", shmmsg_wepd->busy);
   fprintf(ape_log, "Display Request: %d\n", shmmsg_wepd->request);
   fprintf(ape_log, "\n");
