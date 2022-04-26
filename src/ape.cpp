@@ -127,11 +127,6 @@ int main(int argc, char *argv[]) {
 
   while (true) {
     ape_log = fopen("./APE-log.log", "a");
-    fprintf(ape_log, "Busy: %d\n", shmmsg_wepd->busy);
-    fprintf(ape_log, "Request: %d\n", shmmsg_wepd->request);
-    fprintf(ape_log, "Line: %d\n", shmmsg_wepd->num_line);
-    fprintf(ape_log, "CMD: %s\n", shmmsg_wepd->cmd);
-    fprintf(ape_log, "MSG: %s\n", shmmsg_wepd->msg);
     fprintf(ape_log, "\n");
     fclose(ape_log);
   }
