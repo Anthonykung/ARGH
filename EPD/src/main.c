@@ -69,9 +69,6 @@ int main(int argc, char *argv[]) {
   }
   shmmsg_wepd->busy = 1;
   shmmsg_wepd->request = 0;
-  shmmsg_wepd->num_line = 0;
-  shmmsg_wepd->msg[0] = '\0';
-  shmmsg_wepd->cmd[0] = '\0';
 
 
   //****************************************
