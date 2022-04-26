@@ -106,6 +106,7 @@ int wepd_pid;
 int gige_pid = 0;
 int gpio_pid;
 int terminate;
+int display_ready = 0;
 
 // Declare Functions
 int fan_control(int fan_speed);
