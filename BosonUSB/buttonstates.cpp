@@ -159,7 +159,7 @@ void selectpressed()
     if (recordingwasstarted == 1)
     {
       printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
-      shmmsg_gpio->killsignal = 1;
+      //shmmsg_gpio->killsignal = 1;
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
       kill(bosoncampid, SIGTERM);
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
