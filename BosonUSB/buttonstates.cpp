@@ -161,11 +161,11 @@ void selectpressed()
       printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
       shmmsg_gpio->killsignal = 1;
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
-      kill(bosoncampid, SIGINT);
+      kill(bosoncampid, SIGTERM);
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
-      kill(bosonstorepid, SIGINT);
+      kill(bosonstorepid, SIGTERM);
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
       recordingwasstarted = 0;
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
@@ -174,7 +174,7 @@ void selectpressed()
         // Waits for imprex to be killed
       }
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
-      kill(impstorepid, SIGINT);
+      kill(impstorepid, SIGTERM);
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
     }
     needsrestart = 1;
