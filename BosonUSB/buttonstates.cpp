@@ -171,6 +171,7 @@ void selectpressed()
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
       while (shmmsg_gpio->killsignal == 1)
       {
+        printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
         // Waits for imprex to be killed
       }
             printf("HERE KILLSIG IS: %i\n",shmmsg_gpio->killsignal);
