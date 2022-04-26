@@ -88,8 +88,8 @@ int main(int argc, char *argv[]) {
   //thread thermal(temp_regulator, ref(sharedStatus));
   thread display_app(display_exe, ref(sharedStatus));
   thread gpio(gpio_controller, ref(sharedStatus));
-  thread display(display_controller, ref(sharedStatus));
   thread gige(gige_controller, ref(sharedStatus));
+  thread display(display_controller, ref(sharedStatus));
   // thread button(button_main);
   thread display_manager(display_state);
   //thread usbc(usbc_controller, ref(sharedStatus));
