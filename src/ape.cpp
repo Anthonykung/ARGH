@@ -369,7 +369,7 @@ int interactive() {
 
 void  InterruptHandler(int signo) {
     //System Exit
-    printf("\r\nHandler:exit\r\n");
+    printf("\r\nAPE Interrupt Handler\r\n");
     // shmmsg_gpio->startsignal = 0;
     // shmmsg_gpio->killsignal = 0;
 
