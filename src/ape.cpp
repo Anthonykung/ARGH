@@ -561,7 +561,7 @@ int display_state() {
   // int record_config;
   while (true) {
     ape_log = fopen("./APE-Loop.log", "a");
-    fprintf(ape_log, "Entering Loop\n");
+    fprintf(ape_log, "Checking Display State: %d\n", display_ready);
     fprintf(ape_log, "\n");
     fclose(ape_log);
     if (display_ready) {
