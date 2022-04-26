@@ -170,20 +170,29 @@ int gige_controller(int &sharedStatus) {
       // fprintf(fp, "\n");
       // fclose(fp);
     if (shmmsg_gpio->startsignal == 1 && shmmsg_gige->started == 0 && gige_pid == 0) {
+      shmmsg_gige->exit = 0;
       cout << "\033[38;2;255;20;147mGIGE Controller Started!\033[0m" << endl;
       gige_pid = fork();
       if (gige_pid == 0) {
+        shmmsg_gpio->startsignal = 0;
         FILE *fp;
         fp = fopen("./APE-log.log", "a");
         fprintf(fp, "GigE Started PID: %d\n", gige_pid);
+        fprintf(fp, "GigE Started Signal: %d\n", shmmsg_gpio->startsignal);
         fprintf(fp, "\n");
         fclose(fp);
-        shmmsg_gpio->startsignal = 0;
         execl("../IpxSDK/scripts/build/api/IpxStreamAPI", "../IpxSDK/scripts/build/api/IpxStreamAPI", NULL);
+      }
+      else {
+        ape_log = fopen("./APE-log.log", "a");
+        fprintf(ape_log, "Start Signal: %d\n", shmmsg_gpio->startsignal);
+        fprintf(ape_log, "\n");
+        fclose(ape_log);
       }
     }
     if (shmmsg_gpio->killsignal == 1) {
       // kill(gige_pid, SIGINT);
+      shmmsg_gige->exit = 1;
       // cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
       shmmsg_gige->started == 0;
       shmmsg_gpio->killsignal == 0;

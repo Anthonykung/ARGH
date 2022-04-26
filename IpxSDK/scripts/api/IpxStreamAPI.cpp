@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
 
   //****************************************
     
-    // while (shmmsg_gige->exit == 0) {
+    while (shmmsg_gige->exit == 0) {
         // std::cout << "Waiting for start signal" << std::endl;
         // If request check request
         // if (shmmsg_gige->request) {
@@ -192,7 +192,7 @@ int main(int argc, char *argv[]) {
             else
                 std::cout << "Unable to create system!" << std::endl;
         // }
-    // }
+    }
 
     return 0;
 }
