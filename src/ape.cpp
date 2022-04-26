@@ -437,7 +437,8 @@ int display_controller(int &sharedStatus) {
   while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
     // Waiting For Display to be free
     ape_log = fopen("./APE-Loop.log", "a");
-    fprintf(ape_log, "Entering Display Controller\n");
+    fprintf(ape_log, "Display Busy: %d\n", shmmsg_wepd->busy);
+    fprintf(ape_log, "Display Request: %d\n", shmmsg_wepd->request);
     fprintf(ape_log, "\n");
     fclose(ape_log);
   }
