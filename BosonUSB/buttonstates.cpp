@@ -530,6 +530,8 @@ int main()
   needsrestart = 0;
   int menustillpressed = 0;
   int selstillpressed = 0;
+  shmmsg_gpio->startsignal = 0;
+  shmmsg_gpio->killsignal = 0;
 
   gpio_export(251);
   gpio_export(250);
