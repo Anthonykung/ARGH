@@ -390,7 +390,7 @@ void  InterruptHandler(int signo) {
     
     kill(wepd_pid, SIGINT);
     kill(gige_pid, SIGINT);
-    kill(gpio_pid, SIGINT);
+    // kill(gpio_pid, SIGINT);
 
     exit(0);
 }
