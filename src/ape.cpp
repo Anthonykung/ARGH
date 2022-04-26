@@ -399,6 +399,11 @@ int display_controller(int &sharedStatus) {
   unique_lock<mutex> lck(mtx);
   sharedStatus += 1;
   cv.notify_one();
+  
+  ape_log = fopen("./APE-log.log", "a");
+  fprintf(ape_log, "\033[38;2;255;20;147mStarting GIGE Controller...\033[0m\n");
+  fprintf(ape_log, "\n");
+  fclose(ape_log);
 
   // *************************************************************************
   // printf("Initializing Display\n");
