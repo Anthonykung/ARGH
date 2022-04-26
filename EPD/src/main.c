@@ -108,6 +108,8 @@ int main(int argc, char *argv[]) {
   Paint_DrawString_EN(10,  20, "Please wait...", &Font24, WHITE, BLACK);
   EPD_4IN2_Display(BlackImage);
   EPD_4IN2_Sleep();
+  
+  shmmsg_wepd->busy = 0;
 
   fp = fopen("./display.log", "a");
   fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
@@ -132,8 +134,6 @@ int main(int argc, char *argv[]) {
 
   // EPD_4IN2_Display(BlackImage);
   // EPD_4IN2_Sleep();
-  
-  shmmsg_wepd->busy = 0;
 
 
   while (exit == 0) {
