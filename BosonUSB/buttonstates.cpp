@@ -163,7 +163,7 @@ void selectpressed()
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       kill(bosonstorepid, SIGKILL);
       recordingwasstarted = 0;
-      while (shmmsg_gpio->startsignal == 1)
+      while (shmmsg_gpio->killsignal == 1)
       {
         // Waits for imprex to be killed
       }
@@ -241,7 +241,7 @@ void selectpressed()
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       kill(bosonstorepid, SIGKILL);
       recordingwasstarted = 0;
-      while (shmmsg_gpio->startsignal == 1)
+      while (shmmsg_gpio->killsignal == 1)
       {
         // Waits for imprex to be killed
       }
@@ -370,7 +370,7 @@ void pluspressed()
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       kill(bosonstorepid, SIGKILL);
       recordingwasstarted = 0;
-      while (shmmsg_gpio->startsignal == 1)
+      while (shmmsg_gpio->killsignal == 1)
       {
         // Waits for imprex to be killed
       }
@@ -402,7 +402,7 @@ void pluspressed()
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       kill(bosonstorepid, SIGKILL);
       recordingwasstarted = 0;
-      while (shmmsg_gpio->startsignal == 1)
+      while (shmmsg_gpio->killsignal == 1)
       {
         // Waits for imprex to be killed
       }
@@ -437,7 +437,7 @@ void minuspressed()
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       kill(bosonstorepid, SIGKILL);
       recordingwasstarted = 0;
-      while (shmmsg_gpio->startsignal == 1)
+      while (shmmsg_gpio->killsignal == 1)
       {
         // Waits for imprex to be killed
       }
@@ -469,7 +469,7 @@ void minuspressed()
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       kill(bosonstorepid, SIGKILL);
       recordingwasstarted = 0;
-      while (shmmsg_gpio->startsignal == 1)
+      while (shmmsg_gpio->killsignal == 1)
       {
         // Waits for imprex to be killed
       }
@@ -786,7 +786,7 @@ int main()
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
       kill(bosonstorepid, SIGKILL);
       recordingwasstarted = 0;
-      while (shmmsg_gpio->startsignal == 1)
+      while (shmmsg_gpio->killsignal == 1)
       {
         // Waits for imprex to be killed
       }
