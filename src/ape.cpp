@@ -126,9 +126,7 @@ int main(int argc, char *argv[]) {
   // }
 
   while (true) {
-    ape_log = fopen("./APE-log.log", "a");
-    fprintf(ape_log, "\n");
-    fclose(ape_log);
+    
   }
   
   
