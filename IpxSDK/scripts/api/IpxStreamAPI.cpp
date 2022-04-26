@@ -47,6 +47,8 @@ int GetConnectedDevices(IpxCam::Interface *iface);
 // sync values
 std::atomic_bool g_isStop(false);
 std::string g_result = "";
+FILE *logfp;
+int frame_identifier = 0;
 
 #define SHM_KEY_GIGE 0x4443
 #define STR_SIZE 1000
@@ -100,11 +102,28 @@ int main(int argc, char *argv[]) {
         // std::cout << "Waiting for start signal" << std::endl;
         // If request check request
         // if (shmmsg_gige->request) {
-            shmmsg_gige->request = 0;
+            // shmmsg_gige->request = 0;
+            logfp = fopen("./GigE-State.log", "a");
+            fprintf(logfp, "Exit: %d\n", shmmsg_gige->exit);
+            fprintf(logfp, "\n");
+            fclose(logfp);
+            if (shmmsg_gige->exit == 1) {
+                shmmsg_gige->exit = 0;
+                exit(100);
+            }
             // Get System
             auto system = IpxCam::IpxCam_GetSystem();
             if (system) {
-                while (true) {
+                while (shmmsg_gige->exit == 0) {
+                    logfp = fopen("./GigE-Exit.log", "a");
+                    fprintf(logfp, "Exit State: %d\n", shmmsg_gige->exit);
+                    fprintf(logfp, "\n");
+                    fclose(logfp);
+
+                    if (shmmsg_gige->exit == 1) {
+                        shmmsg_gige->exit = 0;
+                        exit(100);
+                    }
                     shmmsg_gige->started = 1;
                     // std::cout << "Started!" << std::endl;
                     // Select desired interface
@@ -578,14 +597,25 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                         char filename[200];
                         uint64_t timestampStr = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
                         // snprintf(filename, 200, "/data/Imperx/GigE-Frame-%lu.raw", timestampStr);
-                        snprintf(filename, 200, "/data/Imperx/GigE-Frame-%" PRIu64 ".raw", frameId - 1);
+                        // snprintf(filename, 200, "/data/Imperx/GigE-Frame-%" PRIu64 ".raw", frameId - 1);
+                        snprintf(filename, 200, "/data/Imperx/GigE-Frame-%d.raw", frame_identifier);
+                        frame_identifier++;
                         g_result = filename;
-                        FILE *logfp;
                         logfp = fopen("./GigE-log.log", "a");
                         fprintf(logfp, "Frame ID: %d\n", frameId);
                         fprintf(logfp, "Droped: %d\n", droped);
                         fprintf(logfp, "\n");
                         fclose(logfp);
+
+                        logfp = fopen("./GigE-Exit.log", "a");
+                        fprintf(logfp, "Exit State: %d\n", shmmsg_gige->exit);
+                        fprintf(logfp, "\n");
+                        fclose(logfp);
+
+                        if (shmmsg_gige->exit == 1) {
+                            shmmsg_gige->exit = 0;
+                            exit(100);
+                        }
 
                         // std::cout << "OK FID:"  << std::uppercase << std::hex << std::setfill('0') << std::setw(16) << frameId << " "
                         //     << std::dec << std::setfill(' ') << std::setw(4) << buffer->GetWidth()<< "W "

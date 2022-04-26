@@ -80,6 +80,7 @@ int main(int argc, char *argv[]) {
   }
 
   shmmsg_gpio->killsignal = 0;
+  shmmsg_gpio->startsignal = 0;
   
   //****************************************
 
@@ -118,10 +119,12 @@ int main(int argc, char *argv[]) {
   
   // while (true) {
   //   if (shmmsg_gpio->killsignal == 1) {
-  //     kill(gige_pid, SIGKILL);
+  //     // kill(gige_pid, SIGKILL);
+  //     shmmsg_gige->exit = 1;
   //     // cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
-  //     shmmsg_gige->started == 0;
-  //     shmmsg_gpio->killsignal == 0;
+  //     shmmsg_gige->started = 0;
+  //     shmmsg_gpio->killsignal = 0;
+  //     gige_pid = 0;
   //   }
   // }
 
@@ -132,7 +135,16 @@ int main(int argc, char *argv[]) {
   fclose(ape_log);
 
   while (true) {
-
+    if (shmmsg_gpio->killsignal == 1) {
+      shmmsg_gige->exit = 1;
+      shmmsg_gige->started = 0;
+      shmmsg_gpio->killsignal = 0;
+      gige_pid = 0;
+      // gige.join();
+    }
+    else {
+      shmmsg_gige->exit = 0;
+    }
   }
 
   
@@ -163,6 +175,10 @@ int gige_controller(int &sharedStatus) {
   // shmmsg_gige->request = 1;
   // shmmsg_gige->start = 1;
   // shmmsg_gige->started == 0 && shmmsg_gpio->killsignal == 0
+  while (shmmsg_gpio->startsignal == 0) {
+    /* code */
+  }
+  
   while (true) {
       // FILE *fp;
       // fp = fopen("./GigE-log.txt", "a");
@@ -190,14 +206,26 @@ int gige_controller(int &sharedStatus) {
         fclose(ape_log);
       }
     }
-    if (shmmsg_gpio->killsignal == 1) {
-      // kill(gige_pid, SIGINT);
-      shmmsg_gige->exit = 1;
-      // cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
-      shmmsg_gige->started == 0;
-      shmmsg_gpio->killsignal == 0;
-      gige_pid = 0;
-    }
+    // if (gige_pid != 0) {
+      if (shmmsg_gpio->killsignal == 1) {
+        // kill(gige_pid, SIGKILL);
+        shmmsg_gige->exit = 1;
+        // cout << "\033[38;2;255;20;147mGIGE Controller Killed!\033[0m" << endl;
+        shmmsg_gige->started = 0;
+        shmmsg_gpio->killsignal = 0;
+        gige_pid = 0;
+      }
+      else {
+        shmmsg_gige->exit = 0;
+      }
+      ape_log = fopen("./APE-GigE.log", "a");
+      fprintf(ape_log, "KILL Signal: %d\n", shmmsg_gpio->startsignal);
+      fprintf(ape_log, "Exit Signal: %d\n", shmmsg_gige->exit);
+      fprintf(ape_log, "Started Signal: %d\n", shmmsg_gige->started);
+      fprintf(ape_log, "PID: %d\n", gige_pid);
+      fprintf(ape_log, "\n");
+      fclose(ape_log);
+    // }
   }
   
   // if (shmmsg_gpio->startsignal) {
