@@ -429,7 +429,7 @@ int display_controller(int &sharedStatus) {
 
   // *************************************************************************
   // If Display is busy, wait for it to be free
-  while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1 || display_ready == 0) {
+  while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
     // Waiting For Display to be free
   }
   // Set command
