@@ -454,6 +454,7 @@ int display_controller(int &sharedStatus) {
 
   ape_log = fopen("./APE-log.log", "a");
   fprintf(ape_log, "Start Write Requested: %d\n", shmmsg_wepd->request);
+  fprintf(ape_log, "Command: %s\n", shmmsg_wepd->cmd);
   fprintf(ape_log, "\n");
   fclose(ape_log);
 
