@@ -114,6 +114,7 @@ zip:
 
 .PHONY: build
 build:
+	git pull
 	cd ../BosonUSB
 	g++ buttonstates.cpp -o exstates -lstdc++fs
 	g++ impstorage.cpp -o eximpstore
