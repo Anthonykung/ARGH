@@ -442,6 +442,11 @@ int display_controller(int &sharedStatus) {
     fprintf(ape_log, "\n");
     fclose(ape_log);
   }
+  ape_log = fopen("./APE-Loop.log", "a");
+  fprintf(ape_log, "Display Busy: %d\n", shmmsg_wepd->busy);
+  fprintf(ape_log, "Display Request: %d\n", shmmsg_wepd->request);
+  fprintf(ape_log, "\n");
+  fclose(ape_log);
   // Set command
   strcpy(shmmsg_wepd->cmd, "start write");
   // Let Display Controller know that a message is ready to be read
