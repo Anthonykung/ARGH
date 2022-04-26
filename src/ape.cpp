@@ -436,6 +436,10 @@ int display_controller(int &sharedStatus) {
   // If Display is busy, wait for it to be free
   while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
     // Waiting For Display to be free
+    ape_log = fopen("./APE-log.log", "a");
+    fprintf(ape_log, "Entering Display Controller\n");
+    fprintf(ape_log, "\n");
+    fclose(ape_log);
   }
   // Set command
   strcpy(shmmsg_wepd->cmd, "start write");
