@@ -124,6 +124,11 @@ int main(int argc, char *argv[]) {
   //     shmmsg_gpio->killsignal == 0;
   //   }
   // }
+
+  while (true) {
+    /* code */
+  }
+  
   
   //thermal.join();
   gige.join();
