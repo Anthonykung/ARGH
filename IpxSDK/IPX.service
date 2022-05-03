@@ -3,11 +3,11 @@ Description=Anthonian Imperx GigEVision Service
 After=basic.target
 
 [Service]
-WorkingDirectory=/home/anthony/Optical-Interface/IpxSDK
+WorkingDirectory=/home/anthony/ARGH/IpxSDK
 Type=forking
-ExecStart=/bin/bash /home/anthony/Optical-Interface/IpxSDK/IpxGigE.sh
-StandardOutput=inherit
-StandardError=inherit
+ExecStart=/bin/bash /home/anthony/ARGH/IpxSDK/IpxGigE.sh
+StandardOutput=/data/log/IpxGigE.log
+StandardError=/data/log/IpxGigE.log
 Restart=always
 User=root
 

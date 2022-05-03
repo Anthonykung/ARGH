@@ -81,6 +81,8 @@ struct shm_wepd {
   char line11[STR_SIZE];
   char line12[STR_SIZE];
   char line13[STR_SIZE];
+  char line14[STR_SIZE];
+  char line15[STR_SIZE];
 };
 
 struct shm_gige {

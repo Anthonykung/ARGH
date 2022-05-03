@@ -45,6 +45,8 @@ struct shm_wepd {
   char line11[STR_SIZE];
   char line12[STR_SIZE];
   char line13[STR_SIZE];
+  char line14[STR_SIZE];
+  char line15[STR_SIZE];
 };
 
 void print_current_time_with_ms() {
@@ -63,6 +65,7 @@ void  Handler(int signo) {
 
 int main(int argc, char *argv[]) {
   signal(SIGINT, Handler);
+  signal(SIGTERM, Handler);
 
   //****************************************
 
@@ -325,6 +328,20 @@ int main(int argc, char *argv[]) {
           Paint_DrawString_EN(10, 240, shmmsg_wepd->line13, &Font24, WHITE, BLACK);
           EPD_4IN2_PartialDisplay(0, 240, 400, 260, BlackImage);
           strcpy(shmmsg_wepd->line13, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line14, "") != 0) {
+          Paint_ClearWindows(0, 260, 400, 280, WHITE);
+          Paint_DrawString_EN(10, 260, shmmsg_wepd->line14, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 260, 400, 280, BlackImage);
+          strcpy(shmmsg_wepd->line14, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line15, "") != 0) {
+          Paint_ClearWindows(0, 280, 400, 300, WHITE);
+          Paint_DrawString_EN(10, 280, shmmsg_wepd->line15, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 280, 400, 300, BlackImage);
+          strcpy(shmmsg_wepd->line15, "");
         }
 
         strcpy(shmmsg_wepd->msg, "");
