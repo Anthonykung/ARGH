@@ -42,7 +42,7 @@
 #define SHM_KEY_WEPD 0x9373
 #define SHM_KEY_GIGE 0x4443
 #define SHM_KEY_GPIO 0x4746
-#define STR_SIZE 1000
+#define STR_SIZE 30
 #define DEVICES 5
 
 // Define Namespaces
@@ -68,6 +68,19 @@ struct shm_wepd {
   char cmd[STR_SIZE];
   int num_line;
   char msg[STR_SIZE];
+  char line1[STR_SIZE];
+  char line2[STR_SIZE];
+  char line3[STR_SIZE];
+  char line4[STR_SIZE];
+  char line5[STR_SIZE];
+  char line6[STR_SIZE];
+  char line7[STR_SIZE];
+  char line8[STR_SIZE];
+  char line9[STR_SIZE];
+  char line10[STR_SIZE];
+  char line11[STR_SIZE];
+  char line12[STR_SIZE];
+  char line13[STR_SIZE];
 };
 
 struct shm_gige {
@@ -129,5 +142,6 @@ int display_write(int line, string message);
 int display_state();
 int interactive();
 void  InterruptHandler(int signo);
+void display_stats();
 
 #endif // APE_HPP

@@ -22,7 +22,7 @@
 #include <time.h>
 
 #define SHM_KEY 0x9373
-#define STR_SIZE 1000
+#define STR_SIZE 30
 
 FILE *fp;
 
@@ -32,6 +32,19 @@ struct shm_wepd {
   char cmd[STR_SIZE];
   int num_line;
   char msg[STR_SIZE];
+  char line1[STR_SIZE];
+  char line2[STR_SIZE];
+  char line3[STR_SIZE];
+  char line4[STR_SIZE];
+  char line5[STR_SIZE];
+  char line6[STR_SIZE];
+  char line7[STR_SIZE];
+  char line8[STR_SIZE];
+  char line9[STR_SIZE];
+  char line10[STR_SIZE];
+  char line11[STR_SIZE];
+  char line12[STR_SIZE];
+  char line13[STR_SIZE];
 };
 
 void print_current_time_with_ms() {
@@ -68,7 +81,6 @@ int main(int argc, char *argv[]) {
     return -1;
   }
   shmmsg_wepd->busy = 1;
-  shmmsg_wepd->request = 0;
 
 
   //****************************************
@@ -86,6 +98,7 @@ int main(int argc, char *argv[]) {
   int exit = 0;
 
   fp = fopen("./display.log", "a");
+  fprintf(fp, "INIT\n");
   fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
   fprintf(fp, "Request: %d\n", shmmsg_wepd->request);
   fprintf(fp, "Line: %d\n", shmmsg_wepd->num_line);
@@ -109,6 +122,7 @@ int main(int argc, char *argv[]) {
   shmmsg_wepd->busy = 0;
 
   fp = fopen("./display.log", "a");
+  fprintf(fp, "INIT DONE\n");
   fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
   fprintf(fp, "Request: %d\n", shmmsg_wepd->request);
   fprintf(fp, "Line: %d\n", shmmsg_wepd->num_line);
@@ -117,46 +131,42 @@ int main(int argc, char *argv[]) {
   fprintf(fp, "\n");
   fclose(fp);
 
-  // printf("Initializing...\n");
-  // if(DEV_Module_Init()!=0){
-  //   return -1;
-  // }
-  // EPD_4IN2_Init_Fast();
-
-  // Paint_SelectImage(BlackImage);
-
-  // Paint_Clear(WHITE);
-  // Paint_DrawString_EN(10,   0, "Initializing...", &Font24, WHITE, BLACK);
-  // Paint_DrawString_EN(10,  20, "Please wait...", &Font24, WHITE, BLACK);
-
-  // EPD_4IN2_Display(BlackImage);
-  // EPD_4IN2_Sleep();
-
 
   while (exit == 0) {
 
-    char user_input[27] = "";
+  // fp = fopen("./display-loop.log", "a");
+  // fprintf(fp, "IN LOOP\n");
+  // fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
+  // fprintf(fp, "Request: %d\n", shmmsg_wepd->request);
+  // fprintf(fp, "Line: %d\n", shmmsg_wepd->num_line);
+  // fprintf(fp, "CMD: %s\n", shmmsg_wepd->cmd);
+  // fprintf(fp, "MSG: %s\n", shmmsg_wepd->msg);
+  // fprintf(fp, "\n");
+  // fclose(fp);
 
-    printf("Enter command: \n");
-    scanf("%s", user_input);
+    // char user_input[27] = "";
+
+    // printf("Enter command: \n");
+    // scanf("%s", user_input);
 
     // Only process if request is activated or user input is not empty
-    if (shmmsg_wepd->request == 1 || strcmp(user_input, "") != 0) {
+    if (shmmsg_wepd->request == 1) {
   
-      fp = fopen("./display.log", "a");
-      fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
-      fprintf(fp, "Request: %d\n", shmmsg_wepd->request);
-      fprintf(fp, "Line: %d\n", shmmsg_wepd->num_line);
-      fprintf(fp, "CMD: %s\n", shmmsg_wepd->cmd);
-      fprintf(fp, "MSG: %s\n", shmmsg_wepd->msg);
-      fprintf(fp, "\n");
-      fclose(fp);
+      // fp = fopen("./display.log", "a");
+      // fprintf(fp, "REQUEST\n");
+      // fprintf(fp, "Busy: %d\n", shmmsg_wepd->busy);
+      // fprintf(fp, "Request: %d\n", shmmsg_wepd->request);
+      // fprintf(fp, "Line: %d\n", shmmsg_wepd->num_line);
+      // fprintf(fp, "CMD: %s\n", shmmsg_wepd->cmd);
+      // fprintf(fp, "MSG: %s\n", shmmsg_wepd->msg);
+      // fprintf(fp, "\n");
+      // fclose(fp);
 
-      printf("Request\n");
+      // printf("Request\n");
       shmmsg_wepd->busy = 1;
       shmmsg_wepd->request = 0;
 
-      if (strcmp(shmmsg_wepd->cmd, "init") == 0 || strcmp(user_input, "init") == 0) {
+      if (strcmp(shmmsg_wepd->cmd, "init") == 0) {
         printf("Initializing...\n");
         if(DEV_Module_Init()!=0){
           return -1;
@@ -173,7 +183,7 @@ int main(int argc, char *argv[]) {
         EPD_4IN2_Sleep();
       }
 
-      else if (strcmp(shmmsg_wepd->cmd, "refresh") == 0 || strcmp(user_input, "refresh") == 0) {
+      else if (strcmp(shmmsg_wepd->cmd, "refresh") == 0) {
         printf("Refreshing...\n");
         if(DEV_Module_Init()!=0){
           return -1;
@@ -191,35 +201,132 @@ int main(int argc, char *argv[]) {
         EPD_4IN2_Sleep();
       }
 
-      else if (strcmp(user_input, "test-write") == 0) {
-        printf("Writing...\n");
+      // else if (strcmp(user_input, "test-write") == 0) {
+      //   printf("Writing...\n");
 
-        EPD_4IN2_Init_Partial();
-        EPD_4IN2_Clear();
-        EPD_4IN2_PartialDisplay(0, 0, 400, 30, BlackImage);
-        Paint_Clear(WHITE);
-        Paint_DrawString_EN(10,  0, user_input, &Font24, WHITE, BLACK);
-        print_current_time_with_ms();
-        Paint_DrawString_EN(10, 20, user_input, &Font24, WHITE, BLACK);
+      //   EPD_4IN2_Init_Partial();
+      //   EPD_4IN2_Clear();
+      //   EPD_4IN2_PartialDisplay(0, 0, 400, 30, BlackImage);
+      //   Paint_Clear(WHITE);
+      //   Paint_DrawString_EN(10,  0, user_input, &Font24, WHITE, BLACK);
+      //   print_current_time_with_ms();
+      //   Paint_DrawString_EN(10, 20, user_input, &Font24, WHITE, BLACK);
 
-        EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
-        print_current_time_with_ms();
-        // EPD_4IN2_Sleep();
+      //   EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
+      //   print_current_time_with_ms();
+      //   // EPD_4IN2_Sleep();
 
-        EPD_4IN2_Init_Partial();
-        Paint_DrawString_EN(10, 40, "Write Complete", &Font24, WHITE, BLACK);
-        print_current_time_with_ms();
-        Paint_DrawString_EN(10, 60, user_input, &Font24, WHITE, BLACK);
+      //   EPD_4IN2_Init_Partial();
+      //   Paint_DrawString_EN(10, 40, "Write Complete", &Font24, WHITE, BLACK);
+      //   print_current_time_with_ms();
+      //   Paint_DrawString_EN(10, 60, user_input, &Font24, WHITE, BLACK);
 
-        EPD_4IN2_PartialDisplay(0, 35, 400, 80, BlackImage);
-        EPD_4IN2_Sleep();
-        print_current_time_with_ms();
-      }
+      //   EPD_4IN2_PartialDisplay(0, 35, 400, 80, BlackImage);
+      //   EPD_4IN2_Sleep();
+      //   print_current_time_with_ms();
+      // }
 
       else if (strcmp(shmmsg_wepd->cmd, "write") == 0) {
         Paint_ClearWindows(0, shmmsg_wepd->num_line * 20, 400, shmmsg_wepd->num_line * 20 + 20, WHITE);
         Paint_DrawString_EN(10, shmmsg_wepd->num_line * 20, shmmsg_wepd->msg, &Font24, WHITE, BLACK);
         EPD_4IN2_PartialDisplay(0, shmmsg_wepd->num_line * 20, 400, shmmsg_wepd->num_line * 20 + 20, BlackImage);
+        strcpy(shmmsg_wepd->msg, "");
+        strcpy(shmmsg_wepd->cmd, "");
+        shmmsg_wepd->num_line = 0;
+      }
+
+      else if (strcmp(shmmsg_wepd->cmd, "write all") == 0) {
+        if (strcmp(shmmsg_wepd->line1, "") != 0) {
+          Paint_ClearWindows(0, 0, 400, 20, WHITE);
+          Paint_DrawString_EN(10, 0, shmmsg_wepd->line1, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 0, 400, 20, BlackImage);
+          strcpy(shmmsg_wepd->line1, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line2, "") != 0) {
+          Paint_ClearWindows(0, 20, 400, 40, WHITE);  
+          Paint_DrawString_EN(10, 20, shmmsg_wepd->line2, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 20, 400, 40, BlackImage);
+          strcpy(shmmsg_wepd->line2, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line3, "") != 0) {
+          Paint_ClearWindows(0, 40, 400, 60, WHITE);
+          Paint_DrawString_EN(10, 40, shmmsg_wepd->line3, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 40, 400, 60, BlackImage);
+          strcpy(shmmsg_wepd->line3, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line4, "") != 0) {
+          Paint_ClearWindows(0, 60, 400, 80, WHITE);
+          Paint_DrawString_EN(10, 60, shmmsg_wepd->line4, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 60, 400, 80, BlackImage);
+          strcpy(shmmsg_wepd->line4, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line5, "") != 0) {
+          Paint_ClearWindows(0, 80, 400, 100, WHITE);
+          Paint_DrawString_EN(10, 80, shmmsg_wepd->line5, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 80, 400, 100, BlackImage);
+          strcpy(shmmsg_wepd->line5, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line6, "") != 0) {
+          Paint_ClearWindows(0, 100, 400, 120, WHITE);
+          Paint_DrawString_EN(10, 100, shmmsg_wepd->line6, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 100, 400, 120, BlackImage);
+          strcpy(shmmsg_wepd->line6, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line7, "") != 0) {
+          Paint_ClearWindows(0, 120, 400, 140, WHITE);
+          Paint_DrawString_EN(10, 120, shmmsg_wepd->line7, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 120, 400, 140, BlackImage);
+          strcpy(shmmsg_wepd->line7, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line8, "") != 0) {
+          Paint_ClearWindows(0, 140, 400, 160, WHITE);
+          Paint_DrawString_EN(10, 140, shmmsg_wepd->line8, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 140, 400, 160, BlackImage);
+          strcpy(shmmsg_wepd->line8, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line9, "") != 0) {
+          Paint_ClearWindows(0, 160, 400, 180, WHITE);
+          Paint_DrawString_EN(10, 160, shmmsg_wepd->line9, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 160, 400, 180, BlackImage);
+          strcpy(shmmsg_wepd->line9, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line10, "") != 0) {
+          Paint_ClearWindows(0, 180, 400, 200, WHITE);
+          Paint_DrawString_EN(10, 180, shmmsg_wepd->line10, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 180, 400, 200, BlackImage);
+          strcpy(shmmsg_wepd->line10, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line11, "") != 0) {
+          Paint_ClearWindows(0, 200, 400, 220, WHITE);
+          Paint_DrawString_EN(10, 200, shmmsg_wepd->line11, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 200, 400, 220, BlackImage);
+          strcpy(shmmsg_wepd->line11, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line12, "") != 0) {
+          Paint_ClearWindows(0, 220, 400, 240, WHITE);
+          Paint_DrawString_EN(10, 220, shmmsg_wepd->line12, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 220, 400, 240, BlackImage);
+          strcpy(shmmsg_wepd->line12, "");
+        }
+
+        if (strcmp(shmmsg_wepd->line13, "") != 0) {
+          Paint_ClearWindows(0, 240, 400, 260, WHITE);
+          Paint_DrawString_EN(10, 240, shmmsg_wepd->line13, &Font24, WHITE, BLACK);
+          EPD_4IN2_PartialDisplay(0, 240, 400, 260, BlackImage);
+          strcpy(shmmsg_wepd->line13, "");
+        }
+
         strcpy(shmmsg_wepd->msg, "");
         strcpy(shmmsg_wepd->cmd, "");
         shmmsg_wepd->num_line = 0;
@@ -236,35 +343,35 @@ int main(int argc, char *argv[]) {
         EPD_4IN2_Sleep();
       }
 
-      else if (strcmp(user_input, "write") == 0) {
-        printf("Writing...\n");
+      // else if (strcmp(user_input, "write") == 0) {
+      //   printf("Writing...\n");
 
-        EPD_4IN2_Init_Partial();
-        EPD_4IN2_Clear();
-        EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
-        Paint_ClearWindows(0, 0, 400, 300, WHITE);
+      //   EPD_4IN2_Init_Partial();
+      //   EPD_4IN2_Clear();
+      //   EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
+      //   Paint_ClearWindows(0, 0, 400, 300, WHITE);
       
-        while (strcmp(user_input, "EXIT()") != 0) {
-          int num_line = 0;
-          printf("Exit with `EXIT()`\n");
-          printf("Enter Line Number: \n");
-          scanf("%d", &num_line);
+      //   while (strcmp(user_input, "EXIT()") != 0) {
+      //     int num_line = 0;
+      //     printf("Exit with `EXIT()`\n");
+      //     printf("Enter Line Number: \n");
+      //     scanf("%d", &num_line);
 
-          printf("Enter text: \n");
-          scanf("%s", user_input);
+      //     printf("Enter text: \n");
+      //     scanf("%s", user_input);
 
-          print_current_time_with_ms();
-          Paint_ClearWindows(0, num_line * 20, 400, num_line * 20 + 20, WHITE);
+      //     print_current_time_with_ms();
+      //     Paint_ClearWindows(0, num_line * 20, 400, num_line * 20 + 20, WHITE);
 
-          Paint_DrawString_EN(10, num_line * 20, user_input, &Font24, WHITE, BLACK);
+      //     Paint_DrawString_EN(10, num_line * 20, user_input, &Font24, WHITE, BLACK);
 
-          EPD_4IN2_PartialDisplay(0, num_line * 20, 400, num_line * 20 + 20, BlackImage);
-          print_current_time_with_ms();
-        }
-        EPD_4IN2_Sleep();
-      }
+      //     EPD_4IN2_PartialDisplay(0, num_line * 20, 400, num_line * 20 + 20, BlackImage);
+      //     print_current_time_with_ms();
+      //   }
+      //   EPD_4IN2_Sleep();
+      // }
 
-      else if (strcmp(shmmsg_wepd->cmd, "exit") == 0 || strcmp(user_input, "exit") == 0) {
+      else if (strcmp(shmmsg_wepd->cmd, "exit") == 0) {
         printf("Exiting...\n");
         EPD_4IN2_Init_Fast();
         EPD_4IN2_Clear();
@@ -280,8 +387,9 @@ int main(int argc, char *argv[]) {
         exit = 1;
         break;
       }
+      shmmsg_wepd->busy = 0;
     }
-    strcpy(user_input, "");
+    // strcpy(user_input, "");
     shmmsg_wepd->busy = 0;
   }
 
