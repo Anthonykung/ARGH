@@ -137,8 +137,8 @@ int main(int argc, char *argv[]) {
 
     char user_input[27] = "";
 
-    // printf("Enter command: \n");
-    // scanf("%s", user_input);
+    printf("Enter command: \n");
+    scanf("%s", user_input);
 
     // Only process if request is activated or user input is not empty
     if (shmmsg_wepd->request == 1 || strcmp(user_input, "") != 0) {
@@ -191,30 +191,30 @@ int main(int argc, char *argv[]) {
         EPD_4IN2_Sleep();
       }
 
-      // else if (strcmp(shmmsg_wepd->cmd, "write") == 0) {
-      //   printf("Writing...\n");
+      else if (strcmp(user_input, "test-write") == 0) {
+        printf("Writing...\n");
 
-      //   EPD_4IN2_Init_Partial();
-      //   EPD_4IN2_Clear();
-      //   EPD_4IN2_PartialDisplay(0, 0, 400, 30, BlackImage);
-      //   Paint_Clear(WHITE);
-      //   Paint_DrawString_EN(10,  0, user_input, &Font24, WHITE, BLACK);
-      //   print_current_time_with_ms();
-      //   Paint_DrawString_EN(10, 20, user_input, &Font24, WHITE, BLACK);
+        EPD_4IN2_Init_Partial();
+        EPD_4IN2_Clear();
+        EPD_4IN2_PartialDisplay(0, 0, 400, 30, BlackImage);
+        Paint_Clear(WHITE);
+        Paint_DrawString_EN(10,  0, user_input, &Font24, WHITE, BLACK);
+        print_current_time_with_ms();
+        Paint_DrawString_EN(10, 20, user_input, &Font24, WHITE, BLACK);
 
-      //   EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
-      //   print_current_time_with_ms();
-      //   // EPD_4IN2_Sleep();
+        EPD_4IN2_PartialDisplay(0, 0, 400, 300, BlackImage);
+        print_current_time_with_ms();
+        // EPD_4IN2_Sleep();
 
-      //   EPD_4IN2_Init_Partial();
-      //   Paint_DrawString_EN(10, 40, "Write Complete", &Font24, WHITE, BLACK);
-      //   print_current_time_with_ms();
-      //   Paint_DrawString_EN(10, 60, user_input, &Font24, WHITE, BLACK);
+        EPD_4IN2_Init_Partial();
+        Paint_DrawString_EN(10, 40, "Write Complete", &Font24, WHITE, BLACK);
+        print_current_time_with_ms();
+        Paint_DrawString_EN(10, 60, user_input, &Font24, WHITE, BLACK);
 
-      //   EPD_4IN2_PartialDisplay(0, 35, 400, 80, BlackImage);
-      //   EPD_4IN2_Sleep();
-      //   print_current_time_with_ms();
-      // }
+        EPD_4IN2_PartialDisplay(0, 35, 400, 80, BlackImage);
+        EPD_4IN2_Sleep();
+        print_current_time_with_ms();
+      }
 
       else if (strcmp(shmmsg_wepd->cmd, "write") == 0) {
         Paint_ClearWindows(0, shmmsg_wepd->num_line * 20, 400, shmmsg_wepd->num_line * 20 + 20, WHITE);

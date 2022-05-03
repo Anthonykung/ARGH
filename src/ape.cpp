@@ -139,6 +139,7 @@ int main(int argc, char *argv[]) {
       shmmsg_gige->exit = 1;
       shmmsg_gige->started = 0;
       shmmsg_gpio->killsignal = 0;
+      kill(gige_pid, SIGKILL);
       gige_pid = 0;
       // gige.join();
     }
@@ -185,7 +186,11 @@ int gige_controller(int &sharedStatus) {
       // fprintf(fp, "shmmsg_gpio->startsignal: %d\n", shmmsg_gpio->startsignal);
       // fprintf(fp, "\n");
       // fclose(fp);
-    if (shmmsg_gpio->startsignal == 1 && shmmsg_gige->started == 0 && gige_pid == 0) {
+    if (shmmsg_gpio->startsignal == 1 && shmmsg_gige->started == 0) {
+      if (gige_pid != 0) {
+        kill(gige_pid, SIGKILL);
+        gige_pid = 0;
+      }
       shmmsg_gige->exit = 0;
       cout << "\033[38;2;255;20;147mGIGE Controller Started!\033[0m" << endl;
       gige_pid = fork();

@@ -107,10 +107,10 @@ int main(int argc, char *argv[]) {
             fprintf(logfp, "Exit: %d\n", shmmsg_gige->exit);
             fprintf(logfp, "\n");
             fclose(logfp);
-            if (shmmsg_gige->exit == 1) {
-                shmmsg_gige->exit = 0;
-                exit(100);
-            }
+            // if (shmmsg_gige->exit == 1) {
+            //     shmmsg_gige->exit = 0;
+            //     exit(100);
+            // }
             // Get System
             auto system = IpxCam::IpxCam_GetSystem();
             if (system) {
@@ -120,10 +120,10 @@ int main(int argc, char *argv[]) {
                     fprintf(logfp, "\n");
                     fclose(logfp);
 
-                    if (shmmsg_gige->exit == 1) {
-                        shmmsg_gige->exit = 0;
-                        exit(100);
-                    }
+                    // if (shmmsg_gige->exit == 1) {
+                    //     shmmsg_gige->exit = 0;
+                    //     exit(100);
+                    // }
                     shmmsg_gige->started = 1;
                     // std::cout << "Started!" << std::endl;
                     // Select desired interface
@@ -612,10 +612,10 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                         fprintf(logfp, "\n");
                         fclose(logfp);
 
-                        if (shmmsg_gige->exit == 1) {
-                            shmmsg_gige->exit = 0;
-                            exit(100);
-                        }
+                        // if (shmmsg_gige->exit == 1) {
+                        //     shmmsg_gige->exit = 0;
+                        //     exit(100);
+                        // }
 
                         // std::cout << "OK FID:"  << std::uppercase << std::hex << std::setfill('0') << std::setw(16) << frameId << " "
                         //     << std::dec << std::setfill(' ') << std::setw(4) << buffer->GetWidth()<< "W "
