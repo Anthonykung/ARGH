@@ -497,6 +497,8 @@ int display_controller(int &sharedStatus) {
 
   display_write(1, "Init Complete");
 
+  display_init();
+
   // Refresh the display every 3 minutes to prevent failure
   while(display_status == 0) {
     if (display_interval == 3) {
@@ -519,6 +521,7 @@ int display_controller(int &sharedStatus) {
       // Let Display Controller know that a message is ready to be read
       shmmsg_wepd->request = 1;
       display_interval = 0;
+      display_init();
     }
     else {
       printf("Display Busy: %d | Display Request %d\n", shmmsg_wepd->busy, shmmsg_wepd->request);
@@ -579,15 +582,93 @@ int display_write(int line, string message) {
   return 0;
 }
 
+int display_init() {
+  switch (shmmsg_gpio->stat_ln) {
+    case 0:
+      display_write(0, "Waiting...");
+      break;
+    case 1:
+      display_write(0, "Recording...");
+      break;
+    case 2:
+      display_write(0, "Stopped...");
+      break;
+    case 3:
+      display_write(0, "Configuring...");
+      break;
+    case 4:
+      display_write(0, "Configuring Camera...");
+      break;
+    default:
+      display_write(0, "ERROR");
+      break;
+  }
+
+  switch (shmmsg_gpio->stop_ln) {
+    case 0:
+      display_write(1, "  Start/Stop Recording");
+      break;
+    case 1:
+      display_write(1, "> Start/Stop Recording");
+      break;
+    default:
+      display_write(1, "ERROR");
+      break;
+  }
+
+  switch (shmmsg_gpio->delay_ln) {
+    case 0:
+      display_write(2, "  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
+      break;
+    case 1:
+      display_write(2, "> Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
+      break;
+    case 2:
+      display_write(2, "> Preset Delay " + to_string(shmmsg_gpio->delay_config/3600) + ":" + to_string((shmmsg_gpio->delay_config%3600)/60) + ":" + to_string(shmmsg_gpio->delay_config%60));
+      break;
+    default:
+      display_write(2, "ERROR");
+      break;
+  }
+
+  switch (shmmsg_gpio->record_ln) {
+    case 0:
+      display_write(3, "  Record Time " + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
+      break;
+    case 1:
+      display_write(3, "> Record Time " + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
+      break;
+    case 2:
+      display_write(3, "> Record Time " + to_string(shmmsg_gpio->record_config/3600) + ":" + to_string((shmmsg_gpio->record_config%3600)/60) + ":" + to_string(shmmsg_gpio->record_config%60));
+      break;
+    default:
+      display_write(3, "ERROR");
+      break;
+  }
+
+  switch (shmmsg_gpio->prev_ln) {
+    case 0:
+      display_write(4, "  Previous Settings");
+      break;
+    case 1:
+      display_write(4, "> Previous Settings");
+      break;
+    default:
+      display_write(4, "ERROR");
+      break;
+  }
+  return 0;
+}
+
 int display_state() {
 
   // Control Variables
-  int pat_stat_ln = 0;
-  int pat_stop_ln = 0;
-  int pat_delay_ln = 0;
-  int pat_record_ln = 0;
-  int pat_prev_ln = 0; 
-  int pat_info_ln = 0;
+  int past_stat_ln = -1;
+  int past_stop_ln = -1;
+  int past_delay_ln = -1;
+  int past_record_ln = -1;
+  int past_prev_ln = -1;
+  int past_info_ln = -1;
 
   // int delay_sec;
   // int delay_config;
@@ -602,115 +683,111 @@ int display_state() {
     if (display_ready) {
       string info_str;
 
-      string delay_temp1 = "  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60);
-      string delay_temp2 = ">  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60);
-      string delay_temp3 = ">  Preset Delay " + to_string(shmmsg_gpio->delay_config/3600) + ":" + to_string((shmmsg_gpio->delay_config%3600)/60) + ":" + to_string(shmmsg_gpio->delay_config%60);
-
-      string record_temp1 = "  Record Time " + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60);
-      string record_temp2 = ">  Record Time " + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60);
-      string record_temp3 = ">  Record Time " + to_string(shmmsg_gpio->record_config/3600) + ":" + to_string((shmmsg_gpio->record_config%3600)/60) + ":" + to_string(shmmsg_gpio->record_config%60);
-
-      switch (shmmsg_gpio->stat_ln) {
-        case 0:
-          strcpy(shmmsg_wepd->line1, "Waiting...");
-          break;
-        case 1:
-          strcpy(shmmsg_wepd->line1, "Recording...");
-          break;
-        case 2:
-          strcpy(shmmsg_wepd->line1, "Stopped...");
-          break;
-        case 3:
-          strcpy(shmmsg_wepd->line1, "Configuring...");
-          break;
-        case 4:
-          strcpy(shmmsg_wepd->line1, "Configuring Camera...");
-          break;
-        default:
-          strcpy(shmmsg_wepd->line1, "ERROR");
-          break;
-      }
-
-      switch (shmmsg_gpio->stop_ln) {
-        case 0:
-          strcpy(shmmsg_wepd->line2, "  Start/Stop Recording");
-          break;
-        case 1:
-          strcpy(shmmsg_wepd->line2, "> Start/Stop Recording");
-          break;
-        default:
-          strcpy(shmmsg_wepd->line2, "ERROR");
-          break;
-      }
-
-      switch (shmmsg_gpio->delay_ln) {
-        case 0:
-          strcpy(shmmsg_wepd->line3, delay_temp1.c_str());
-          break;
-        case 1:
-          strcpy(shmmsg_wepd->line3, delay_temp2.c_str());
-          break;
-        case 2:
-          strcpy(shmmsg_wepd->line3, delay_temp3.c_str());
-          break;
-        default:
-          strcpy(shmmsg_wepd->line3, "ERROR");
-          break;
-      }
-
-      switch (shmmsg_gpio->record_ln) {
-        case 0:
-          strcpy(shmmsg_wepd->line4, record_temp1.c_str());
-          break;
-        case 1:
-          strcpy(shmmsg_wepd->line4, record_temp2.c_str());
-          break;
-        case 2:
-          strcpy(shmmsg_wepd->line4, record_temp3.c_str());
-          break;
-        default:
-          strcpy(shmmsg_wepd->line4, "ERROR");
-          break;
-      }
-
-      switch (shmmsg_gpio->prev_ln) {
-        case 0:
-          strcpy(shmmsg_wepd->line5, "  Previous Settings");
-          break;
-        case 1:
-          strcpy(shmmsg_wepd->line5, "> Previous Settings");
-          break;
-        default:
-          strcpy(shmmsg_wepd->line5, "ERROR");
-          break;
-      }
-
-      switch (shmmsg_gpio->info_ln) {
-        case 0:
-          strcpy(shmmsg_wepd->line7, "");
-          break;
-        case 1:
-          strcpy(shmmsg_wepd->line7, info_str.c_str());
-          break;
-        default:
-          strcpy(shmmsg_wepd->line7, "ERROR");
-          break;
-      }
-      if (pat_stat_ln != shmmsg_gpio->stat_ln || pat_stop_ln != shmmsg_gpio->stop_ln || pat_delay_ln != shmmsg_gpio->delay_ln || pat_record_ln != shmmsg_gpio->record_ln || pat_prev_ln != shmmsg_gpio->prev_ln || pat_info_ln != shmmsg_gpio->info_ln) {
-        // If Display is busy, wait for it to be free
-        while (shmmsg_wepd->busy == 1 || shmmsg_wepd->request == 1) {
-          // Waiting For Display to be free
+      if (past_stat_ln != shmmsg_gpio->stat_ln) {
+        past_stat_ln = shmmsg_gpio->stat_ln;
+        switch (shmmsg_gpio->stat_ln) {
+          case 0:
+            display_write(0, "Waiting...");
+            break;
+          case 1:
+            display_write(0, "Recording...");
+            break;
+          case 2:
+            display_write(0, "Stopped...");
+            break;
+          case 3:
+            display_write(0, "Configuring...");
+            break;
+          case 4:
+            display_write(0, "Configuring Camera...");
+            break;
+          default:
+            display_write(0, "ERROR");
+            break;
         }
-        strcpy(shmmsg_wepd->cmd, "write all");
-        shmmsg_wepd->request = 1;
-        pat_stat_ln = shmmsg_gpio->stat_ln;
-        pat_stop_ln = shmmsg_gpio->stop_ln;
-        pat_delay_ln = shmmsg_gpio->delay_ln;
-        pat_record_ln = shmmsg_gpio->record_ln;
-        pat_prev_ln = shmmsg_gpio->prev_ln;
-        pat_info_ln = shmmsg_gpio->info_ln;
+      }
+
+      if (past_stop_ln != shmmsg_gpio->stop_ln) {
+        past_stop_ln = shmmsg_gpio->stop_ln;
+        switch (shmmsg_gpio->stop_ln) {
+          case 0:
+            display_write(1, "  Start/Stop Recording");
+            break;
+          case 1:
+            display_write(1, "> Start/Stop Recording");
+            break;
+          default:
+            display_write(1, "ERROR");
+            break;
+        }
+      }
+
+      if (past_delay_ln != shmmsg_gpio->delay_ln || shmmsg_gpio->record_sec != 0 || shmmsg_gpio->delay_ln == 2) {
+        past_delay_ln = shmmsg_gpio->delay_ln;
+        switch (shmmsg_gpio->delay_ln) {
+          case 0:
+            display_write(2, "  Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
+            break;
+          case 1:
+            display_write(2, "> Preset Delay " + to_string(shmmsg_gpio->delay_sec/3600) + ":" + to_string((shmmsg_gpio->delay_sec%3600)/60) + ":" + to_string(shmmsg_gpio->delay_sec%60));
+            break;
+          case 2:
+            display_write(2, "> Preset Delay " + to_string(shmmsg_gpio->delay_config/3600) + ":" + to_string((shmmsg_gpio->delay_config%3600)/60) + ":" + to_string(shmmsg_gpio->delay_config%60));
+            break;
+          default:
+            display_write(2, "ERROR");
+            break;
+        }
+      }
+
+      if (past_record_ln != shmmsg_gpio->record_ln || shmmsg_gpio->record_sec != 0 || shmmsg_gpio->record_ln == 2) {
+        past_record_ln = shmmsg_gpio->record_ln;
+        switch (shmmsg_gpio->record_ln) {
+          case 0:
+            display_write(3, "  Record Time " + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
+            break;
+          case 1:
+            display_write(3, "> Record Time " + to_string(shmmsg_gpio->record_sec/3600) + ":" + to_string((shmmsg_gpio->record_sec%3600)/60) + ":" + to_string(shmmsg_gpio->record_sec%60));
+            break;
+          case 2:
+            display_write(3, "> Record Time " + to_string(shmmsg_gpio->record_config/3600) + ":" + to_string((shmmsg_gpio->record_config%3600)/60) + ":" + to_string(shmmsg_gpio->record_config%60));
+            break;
+          default:
+            display_write(3, "ERROR");
+            break;
+        }
+      }
+
+      if (past_prev_ln != shmmsg_gpio->prev_ln) {
+        past_prev_ln = shmmsg_gpio->prev_ln;
+        switch (shmmsg_gpio->prev_ln) {
+          case 0:
+            display_write(4, "  Previous Settings");
+            break;
+          case 1:
+            display_write(4, "> Previous Settings");
+            break;
+          default:
+            display_write(4, "ERROR");
+            break;
+        }
+      }
+
+      if (past_info_ln != shmmsg_gpio->info_ln) {
+        past_info_ln = shmmsg_gpio->info_ln;
+        switch (shmmsg_gpio->info_ln) {
+          case 0:
+            display_write(5, "");
+            break;
+          case 1:
+            display_write(5, "Configuring...");
+            break;
+          default:
+            display_write(5, "ERROR");
+            break;
+        }
       }
     }
   }
-
+  return 0;
 }

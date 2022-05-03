@@ -143,5 +143,6 @@ int display_state();
 int interactive();
 void  InterruptHandler(int signo);
 void display_stats();
+int display_init();
 
 #endif // APE_HPP
