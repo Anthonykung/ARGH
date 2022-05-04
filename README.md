@@ -24,7 +24,7 @@ The primary objective of our project is to create a graphical history (video in 
 
 ## Initialization
 
-To initialize ARGH service, run the following command:
+To Brick your NVIDIA Jetson, run the following command:
 
 ```bash
 $ ./init.sh
