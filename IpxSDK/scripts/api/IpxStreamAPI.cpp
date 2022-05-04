@@ -51,7 +51,7 @@ FILE *logfp;
 int frame_identifier = 0;
 
 #define SHM_KEY_GIGE 0x4443
-#define STR_SIZE 1000
+#define STR_SIZE 100
 #define DEVICES 5
 
 struct shm_gige {
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
     while (shmid_gige < 0) {
         shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct shm_gige), IPC_CREAT | 0644);
         if (shmid_gige < 0) {
-            std::cout << "IPC Init Failed\n" << std::endl;
+            std::cout << "\033[91mGigE IPC Init Failed\033[0m\n" << std::endl;
             return shmid_gige;
         }
     }
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
     
     shmmsg_gige = (struct shm_gige *) shmat(shmid_gige, NULL, 0);
     if (shmmsg_gige == (void *) -1) {
-        std::cout << "IPC Attach Failed\n" << std::endl;
+        std::cout << "\033[91mGigE IPC Attach Failed\033[0m\n" << std::endl;
         return -1;
     }
 

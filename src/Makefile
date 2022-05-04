@@ -123,5 +123,9 @@ build:
 
 .PHONY: test
 test:
-	echo "5" > ../BosonUSB/timeddelay.txt
-	echo "10" > ../BosonUSB/recordingtime.txt
+	echo "120" > ../BosonUSB/timeddelay.txt
+	echo "60" > ../BosonUSB/recordingtime.txt
+
+.PHONY: cleanStorage
+cleanStorage:
+	rm -rf /media/anthony/CapstoneSSD/*

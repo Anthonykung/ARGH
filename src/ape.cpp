@@ -192,6 +192,7 @@ int gige_controller(int &sharedStatus) {
       // fprintf(fp, "\n");
       // fclose(fp);
     if (shmmsg_gpio->startsignal == 1 && shmmsg_gige->started == 0) {
+      shmmsg_gige->started = 1;
       if (gige_pid != 0) {
         kill(gige_pid, SIGKILL);
         gige_pid = 0;
