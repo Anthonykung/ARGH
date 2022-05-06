@@ -1,3 +1,5 @@
+# User Guide
+
 This device comes with four buttons to control the cameras attached to it. After plugging in the system and waiting for the screen to display fully the below actions should be available to be taken.
 
 
