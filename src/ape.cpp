@@ -752,8 +752,8 @@ int display_state() {
         }
       }
 
-      if (past_delay_ln != shmmsg_gpio->delay_ln || shmmsg_gpio->record_sec != 0 || shmmsg_gpio->delay_ln == 2) {
-        past_delay_ln = shmmsg_gpio->delay_ln;
+      // if (past_delay_ln != shmmsg_gpio->delay_ln || shmmsg_gpio->record_sec != 0 || shmmsg_gpio->delay_ln == 2) {
+        // past_delay_ln = shmmsg_gpio->delay_ln;
         switch (shmmsg_gpio->delay_ln) {
           case 0:
             strcpy(shmmsg_wepd->line3, delay1.c_str());
@@ -768,10 +768,10 @@ int display_state() {
             strcpy(shmmsg_wepd->line3, "ERROR");
             break;
         }
-      }
+      // }
 
-      if (past_record_ln != shmmsg_gpio->record_ln || shmmsg_gpio->record_sec != 0 || shmmsg_gpio->record_ln == 2) {
-        past_record_ln = shmmsg_gpio->record_ln;
+      // if (past_record_ln != shmmsg_gpio->record_ln || shmmsg_gpio->record_sec != 0 || shmmsg_gpio->record_ln == 2) {
+        // past_record_ln = shmmsg_gpio->record_ln;
         switch (shmmsg_gpio->record_ln) {
           case 0:
             strcpy(shmmsg_wepd->line4, record1.c_str());
@@ -786,7 +786,7 @@ int display_state() {
             strcpy(shmmsg_wepd->line4, "ERROR");
             break;
         }
-      }
+      // }
 
       if (past_prev_ln != shmmsg_gpio->prev_ln) {
         past_prev_ln = shmmsg_gpio->prev_ln;
@@ -810,7 +810,7 @@ int display_state() {
             strcpy(shmmsg_wepd->line6, "");
             break;
           case 1:
-            strcpy(shmmsg_wepd->line6, "Configuring...");
+            strcpy(shmmsg_wepd->line6, "Press Select To Confirm");
             break;
           default:
             strcpy(shmmsg_wepd->line6, "ERROR");

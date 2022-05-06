@@ -75,38 +75,40 @@ int main(int argc, char *argv[]) {
     // Interprocess Communication
 
     // ANTH = 2684
-    int shmid_gige = -1;
-    while (shmid_gige < 0) {
-        shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct shm_gige), IPC_CREAT | 0644);
-        if (shmid_gige < 0) {
-            std::cout << "\033[91mGigE IPC Init Failed\033[0m\n" << std::endl;
-            return shmid_gige;
-        }
-    }
+    // int shmid_gige = -1;
+    // while (shmid_gige < 0) {
+    //     shmid_gige = shmget(SHM_KEY_GIGE, sizeof(struct shm_gige), IPC_CREAT | 0644);
+    //     if (shmid_gige < 0) {
+    //         std::cout << "\033[91mGigE IPC Init Failed\033[0m\n" << std::endl;
+    //         return shmid_gige;
+    //     }
+    // }
     
     
-    shmmsg_gige = (struct shm_gige *) shmat(shmid_gige, NULL, 0);
-    if (shmmsg_gige == (void *) -1) {
-        std::cout << "\033[91mGigE IPC Attach Failed\033[0m\n" << std::endl;
-        return -1;
-    }
+    // shmmsg_gige = (struct shm_gige *) shmat(shmid_gige, NULL, 0);
+    // if (shmmsg_gige == (void *) -1) {
+    //     std::cout << "\033[91mGigE IPC Attach Failed\033[0m\n" << std::endl;
+    //     return -1;
+    // }
 
-    shmmsg_gige->busy = 0;
-    shmmsg_gige->exit = 0;
-    shmmsg_gige->start = 0;
-    shmmsg_gige->started == 0;
+    // shmmsg_gige->busy = 0;
+    // shmmsg_gige->exit = 0;
+    // shmmsg_gige->start = 0;
+    // shmmsg_gige->started == 0;
 
   //****************************************
     
-    while (shmmsg_gige->exit == 0) {
+    while (true /* shmmsg_gige->exit == 0 */) {
         // std::cout << "Waiting for start signal" << std::endl;
         // If request check request
         // if (shmmsg_gige->request) {
             // shmmsg_gige->request = 0;
-            logfp = fopen("./GigE-State.log", "a");
-            fprintf(logfp, "Exit: %d\n", shmmsg_gige->exit);
-            fprintf(logfp, "\n");
-            fclose(logfp);
+
+            // logfp = fopen("./GigE-State.log", "a");
+            // fprintf(logfp, "Exit: %d\n", shmmsg_gige->exit);
+            // fprintf(logfp, "\n");
+            // fclose(logfp);
+
             // if (shmmsg_gige->exit == 1) {
             //     shmmsg_gige->exit = 0;
             //     exit(100);
@@ -114,17 +116,17 @@ int main(int argc, char *argv[]) {
             // Get System
             auto system = IpxCam::IpxCam_GetSystem();
             if (system) {
-                while (shmmsg_gige->exit == 0) {
-                    logfp = fopen("./GigE-Exit.log", "a");
-                    fprintf(logfp, "Exit State: %d\n", shmmsg_gige->exit);
-                    fprintf(logfp, "\n");
-                    fclose(logfp);
+                while (true /* shmmsg_gige->exit == 0 */) {
+                    // logfp = fopen("./GigE-Exit.log", "a");
+                    // fprintf(logfp, "Exit State: %d\n", shmmsg_gige->exit);
+                    // fprintf(logfp, "\n");
+                    // fclose(logfp);
 
                     // if (shmmsg_gige->exit == 1) {
                     //     shmmsg_gige->exit = 0;
                     //     exit(100);
                     // }
-                    shmmsg_gige->started = 1;
+                    // shmmsg_gige->started = 1;
                     // std::cout << "Started!" << std::endl;
                     // Select desired interface
                     auto iface = SelectInterface(system);
@@ -251,10 +253,10 @@ int GetConnectedDevices(IpxCam::Interface *iface)
         std::cout << "\tDevice Name: " << device->GetDisplayName() << "\tIdentified By: [" << (devices.size() - 1) << "]" << std::endl;
         char identity[STR_SIZE];
         snprintf(identity, STR_SIZE - 1, "%d", (devices.size() - 1));
-        strcpy(shmmsg_gige->identifier[numDevices], identity);
+        // strcpy(shmmsg_gige->identifier[numDevices], identity);
         numDevices++;
     }
-    shmmsg_gige->num_devices = numDevices;
+    // shmmsg_gige->num_devices = numDevices;
     return numDevices;
 }
 
@@ -607,10 +609,10 @@ std::string AcquireImages( IpxCam::Device *device, IpxCam::Stream *stream )
                         fprintf(logfp, "\n");
                         fclose(logfp);
 
-                        logfp = fopen("./GigE-Exit.log", "a");
-                        fprintf(logfp, "Exit State: %d\n", shmmsg_gige->exit);
-                        fprintf(logfp, "\n");
-                        fclose(logfp);
+                        // logfp = fopen("./GigE-Exit.log", "a");
+                        // fprintf(logfp, "Exit State: %d\n", shmmsg_gige->exit);
+                        // fprintf(logfp, "\n");
+                        // fclose(logfp);
 
                         // if (shmmsg_gige->exit == 1) {
                         //     shmmsg_gige->exit = 0;
