@@ -1,0 +1,10 @@
+{
+  "name": "argh-presentation",
+  "version": "1.0.0",
+  "description": "ARGH Project Presentation Deck",
+  "main": "ape.js",
+  "repository": "https://github.com/Anthonykung/ARGH.git",
+  "author": "Anthony Kung",
+  "license": "Apache-2.0",
+  "private": false
+}
