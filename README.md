@@ -40,7 +40,7 @@ wget https://www.imperx.com/wp-content/uploads/Member/Cameras/Cheetah/IpxCameraS
 
 ## Initialization
 
-To Brick your NVIDIA Jetson, run the following command:
+To run this on NVIDIA Jetson, run the following command:
 
 ```bash
 $ ./init.sh
