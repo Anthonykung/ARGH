@@ -50,3 +50,6 @@ IGNORE
 *.tiff
 *.ico
 *.raw
+
+# Node.js
+*node_modules*

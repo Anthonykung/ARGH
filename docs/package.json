@@ -6,5 +6,11 @@
   "repository": "https://github.com/Anthonykung/ARGH.git",
   "author": "Anthony Kung",
   "license": "Apache-2.0",
-  "private": false
+  "private": false,
+  "scripts": {
+    "start": "mdx-deck slide-deck.mdx"
+  },
+  "devDependencies": {
+    "mdx-deck": "^4.1.1"
+  }
 }
