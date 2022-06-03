@@ -1,0 +1,234 @@
+import ARGHTheme from './theme';
+import Layout from './layout';
+import Browser from './components/browser';
+import Code from './components/code';
+import { CodeSurfer, CodeSurferColumns, Step } from 'code-surfer';
+import { nightOwl } from "@code-surfer/themes";
+
+export const theme = ARGHTheme;
+
+# ARGH Project Presentation
+
+## 2022 Oregon State University EECS Capstone Project
+
+By: Anthony Kung, Caden Friesen, and Henry Chen
+
+---
+
+# Aerospace Recorder for Graphical History
+
+The ARGH Project is to create a camera system for a large commercial and/or military drone to record graphical data or images using industrial vision cameras.
+
+---
+
+# ARGH Project System
+
+1. Nvidia Jetson AGX Xavier
+2. GigE Vision Camera
+3. USB Vision Camera
+4. PoE Switch
+5. VICOR Power Supply
+6. Pushbutton
+7. Waveshare e-Paper Display
+
+---
+
+<Code type="cpp" language="c++">
+
+<CodeSurfer theme={nightOwl}>
+
+```cpp file=../../src/ape.cpp showNumbers title="src/ape.cpp" subtitle="Primary Executable"
+```
+
+```cpp 1:50 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 50:100 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 100:150 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 150:200 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 200:250 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 250:300 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 300:350 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 350:400 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 400:450 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 450:500 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 500:550 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 550:600 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 600:650 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 650:700 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 700:750 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 750:800 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 800:850 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+</CodeSurfer>
+
+</Code>
+
+---
+
+<Code type="cpp" language="c++">
+
+<CodeSurferColumns themes={[nightOwl, nightOwl]}>
+
+<Step>
+
+```cpp file=../../src/ape.cpp showNumbers title="src/ape.cpp" subtitle="Primary Executable"
+```
+
+```cpp file=../../EPD/src/main.c showNumbers title="EPD/src/main.c" subtitle="e-Paper Display"
+```
+
+</Step>
+
+<Step subtitle="Inter-Process Communication">
+
+```cpp 34:46 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 72:86 file=../../EPD/src/main.c showNumbers title="EPD/src/main.c"
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+</Code>
+
+---
+
+<Code type="cpp" language="c++">
+
+<CodeSurfer theme={nightOwl}>
+
+```cpp file=../../src/ape.cpp showNumbers title="src/ape.cpp" subtitle="Primary Executable"
+```
+
+```cpp 95:102 file=../../src/ape.cpp showNumbers title="src/ape.cpp" subtitle="Multi-Threading"
+```
+
+</CodeSurfer>
+
+</Code>
+
+---
+
+<Code type="cpp" language="c++">
+
+<CodeSurferColumns themes={[nightOwl, nightOwl]}>
+
+<Step>
+
+```cpp file=../../src/ape.cpp showNumbers title="src/ape.cpp" subtitle="GigE Camera Process"
+```
+
+```cpp file=../../BosonUSB/buttonstates.cpp showNumbers title="BosonUSB/buttonstates.cpp" subtitle="USB Camera Process"
+```
+
+</Step>
+
+<Step subtitle="Child Processes">
+
+```cpp 200:220 file=../../src/ape.cpp showNumbers title="src/ape.cpp"
+```
+
+```cpp 87:98 file=../../BosonUSB/buttonstates.cpp showNumbers title="BosonUSB/buttonstates.cpp"
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+</Code>
+
+---
+
+<Code type="cpp" language="c++">
+
+<CodeSurferColumns themes={[nightOwl, nightOwl]}>
+
+<Step subtitle="Storage Functions">
+
+```cpp file=../../BosonUSB/runusb.cpp showNumbers title="BosonUSB/runusb.cpp"
+```
+
+```cpp file=../../BosonUSB/impstorage.cpp showNumbers title="BosonUSB/impstorage.cpp"
+```
+
+</Step>
+
+<Step>
+
+```cpp 18:35 file=../../BosonUSB/runusb.cpp showNumbers title="BosonUSB/runusb.cpp" subtitle="USB Camera Storage"
+```
+
+```cpp 20:37 file=../../BosonUSB/impstorage.cpp showNumbers title="BosonUSB/impstorage.cpp" subtitle="GigE Camera Storage"
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+</Code>
+
+---
+
+<Code type="cpp" language="c++">
+
+<CodeSurfer theme={nightOwl}>
+
+```cpp file=../../IpxSDK/scripts/api/IpxStreamAPI.cpp showNumbers title="IpxSDK/scripts/api/IpxStreamAPI.cpp" subtitle="GigE Vision Camera"
+```
+
+```cpp 1:50 file=../../IpxSDK/scripts/api/IpxStreamAPI.cpp showNumbers title="IpxSDK/scripts/api/IpxStreamAPI.cpp"
+```
+
+</CodeSurfer>
+
+</Code>
+
+---
+
+<Code type="cpp" language="c++">
+
+<CodeSurfer theme={nightOwl}>
+
+```cpp file=../../BosonUSB/BosonUSB.cpp showNumbers title="BosonUSB/BosonUSB.cpp" subtitle="USB Vision Camera"
+```
+
+```cpp 1:50 file=../../BosonUSB/BosonUSB.cpp showNumbers title="BosonUSB/BosonUSB.cpp"
+```
+
+</CodeSurfer>
+
+</Code>

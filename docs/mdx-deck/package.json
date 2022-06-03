@@ -11,6 +11,12 @@
     "start": "mdx-deck slide-deck.mdx"
   },
   "devDependencies": {
-    "mdx-deck": "^4.1.1"
+    "code-surfer": "^3.1.1",
+    "mdx-deck": "3.1.0"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.8.2"
   }
 }
